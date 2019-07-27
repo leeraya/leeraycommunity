@@ -1,39 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="life.leeray.community.mapper.QuestionMapper">
-  <resultMap id="BaseResultMap" type="life.leeray.community.model.Question">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate" />
-    <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified" />
-    <result column="creator" jdbcType="INTEGER" property="creator" />
-    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
-    <result column="view_count" jdbcType="INTEGER" property="viewCount" />
-    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
-    <result column="tag" jdbcType="VARCHAR" property="tag" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="life.leeray.community.mapper.QuestionMapper" >
+  <resultMap id="BaseResultMap" type="life.leeray.community.model.Question" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="BIGINT" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="BIGINT" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="comment_count" property="commentCount" jdbcType="INTEGER" />
+    <result column="view_count" property="viewCount" jdbcType="INTEGER" />
+    <result column="like_count" property="likeCount" jdbcType="INTEGER" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="life.leeray.community.model.Question">
-    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  <resultMap id="ResultMapWithBLOBs" type="life.leeray.community.model.Question" extends="BaseResultMap" >
+    <result column="description" property="description" jdbcType="LONGVARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -44,25 +44,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -73,44 +73,44 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     id, title, gmt_create, gmt_modified, creator, comment_count, view_count, like_count, 
     tag
   </sql>
-  <sql id="Blob_Column_List">
+  <sql id="Blob_Column_List" >
     description
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="life.leeray.community.model.QuestionExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="life.leeray.community.model.QuestionExample" >
     select
-    <if test="distinct">
+    <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from question
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null">
+    <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="life.leeray.community.model.QuestionExample" resultMap="BaseResultMap">
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="life.leeray.community.model.QuestionExample" >
     select
-    <if test="distinct">
+    <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
     from question
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null">
+    <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     ,
@@ -118,17 +118,17 @@
     from question
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from question
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="life.leeray.community.model.QuestionExample">
+  <delete id="deleteByExample" parameterType="life.leeray.community.model.QuestionExample" >
     delete from question
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="life.leeray.community.model.Question">
+  <insert id="insert" parameterType="life.leeray.community.model.Question" >
     insert into question (id, title, gmt_create, 
       gmt_modified, creator, comment_count, 
       view_count, like_count, tag, 
@@ -138,118 +138,118 @@
       #{viewCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}, #{tag,jdbcType=VARCHAR}, 
       #{description,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="life.leeray.community.model.Question">
+  <insert id="insertSelective" parameterType="life.leeray.community.model.Question" >
     insert into question
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="title != null">
+      <if test="title != null" >
         title,
       </if>
-      <if test="gmtCreate != null">
+      <if test="gmtCreate != null" >
         gmt_create,
       </if>
-      <if test="gmtModified != null">
+      <if test="gmtModified != null" >
         gmt_modified,
       </if>
-      <if test="creator != null">
+      <if test="creator != null" >
         creator,
       </if>
-      <if test="commentCount != null">
+      <if test="commentCount != null" >
         comment_count,
       </if>
-      <if test="viewCount != null">
+      <if test="viewCount != null" >
         view_count,
       </if>
-      <if test="likeCount != null">
+      <if test="likeCount != null" >
         like_count,
       </if>
-      <if test="tag != null">
+      <if test="tag != null" >
         tag,
       </if>
-      <if test="description != null">
+      <if test="description != null" >
         description,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="title != null">
+      <if test="title != null" >
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="gmtCreate != null">
+      <if test="gmtCreate != null" >
         #{gmtCreate,jdbcType=BIGINT},
       </if>
-      <if test="gmtModified != null">
+      <if test="gmtModified != null" >
         #{gmtModified,jdbcType=BIGINT},
       </if>
-      <if test="creator != null">
+      <if test="creator != null" >
         #{creator,jdbcType=INTEGER},
       </if>
-      <if test="commentCount != null">
+      <if test="commentCount != null" >
         #{commentCount,jdbcType=INTEGER},
       </if>
-      <if test="viewCount != null">
+      <if test="viewCount != null" >
         #{viewCount,jdbcType=INTEGER},
       </if>
-      <if test="likeCount != null">
+      <if test="likeCount != null" >
         #{likeCount,jdbcType=INTEGER},
       </if>
-      <if test="tag != null">
+      <if test="tag != null" >
         #{tag,jdbcType=VARCHAR},
       </if>
-      <if test="description != null">
+      <if test="description != null" >
         #{description,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="life.leeray.community.model.QuestionExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="life.leeray.community.model.QuestionExample" resultType="java.lang.Integer" >
     select count(*) from question
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map" >
     update question
-    <set>
-      <if test="record.id != null">
+    <set >
+      <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.title != null">
+      <if test="record.title != null" >
         title = #{record.title,jdbcType=VARCHAR},
       </if>
-      <if test="record.gmtCreate != null">
+      <if test="record.gmtCreate != null" >
         gmt_create = #{record.gmtCreate,jdbcType=BIGINT},
       </if>
-      <if test="record.gmtModified != null">
+      <if test="record.gmtModified != null" >
         gmt_modified = #{record.gmtModified,jdbcType=BIGINT},
       </if>
-      <if test="record.creator != null">
+      <if test="record.creator != null" >
         creator = #{record.creator,jdbcType=INTEGER},
       </if>
-      <if test="record.commentCount != null">
+      <if test="record.commentCount != null" >
         comment_count = #{record.commentCount,jdbcType=INTEGER},
       </if>
-      <if test="record.viewCount != null">
+      <if test="record.viewCount != null" >
         view_count = #{record.viewCount,jdbcType=INTEGER},
       </if>
-      <if test="record.likeCount != null">
+      <if test="record.likeCount != null" >
         like_count = #{record.likeCount,jdbcType=INTEGER},
       </if>
-      <if test="record.tag != null">
+      <if test="record.tag != null" >
         tag = #{record.tag,jdbcType=VARCHAR},
       </if>
-      <if test="record.description != null">
+      <if test="record.description != null" >
         description = #{record.description,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map">
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
     update question
     set id = #{record.id,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
@@ -261,11 +261,11 @@
       like_count = #{record.likeCount,jdbcType=INTEGER},
       tag = #{record.tag,jdbcType=VARCHAR},
       description = #{record.description,jdbcType=LONGVARCHAR}
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map">
+  <update id="updateByExample" parameterType="map" >
     update question
     set id = #{record.id,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
@@ -276,44 +276,44 @@
       view_count = #{record.viewCount,jdbcType=INTEGER},
       like_count = #{record.likeCount,jdbcType=INTEGER},
       tag = #{record.tag,jdbcType=VARCHAR}
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="life.leeray.community.model.Question">
+  <update id="updateByPrimaryKeySelective" parameterType="life.leeray.community.model.Question" >
     update question
-    <set>
-      <if test="title != null">
+    <set >
+      <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="gmtCreate != null">
+      <if test="gmtCreate != null" >
         gmt_create = #{gmtCreate,jdbcType=BIGINT},
       </if>
-      <if test="gmtModified != null">
+      <if test="gmtModified != null" >
         gmt_modified = #{gmtModified,jdbcType=BIGINT},
       </if>
-      <if test="creator != null">
+      <if test="creator != null" >
         creator = #{creator,jdbcType=INTEGER},
       </if>
-      <if test="commentCount != null">
+      <if test="commentCount != null" >
         comment_count = #{commentCount,jdbcType=INTEGER},
       </if>
-      <if test="viewCount != null">
+      <if test="viewCount != null" >
         view_count = #{viewCount,jdbcType=INTEGER},
       </if>
-      <if test="likeCount != null">
+      <if test="likeCount != null" >
         like_count = #{likeCount,jdbcType=INTEGER},
       </if>
-      <if test="tag != null">
+      <if test="tag != null" >
         tag = #{tag,jdbcType=VARCHAR},
       </if>
-      <if test="description != null">
+      <if test="description != null" >
         description = #{description,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="life.leeray.community.model.Question">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="life.leeray.community.model.Question" >
     update question
     set title = #{title,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=BIGINT},
@@ -326,7 +326,7 @@
       description = #{description,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="life.leeray.community.model.Question">
+  <update id="updateByPrimaryKey" parameterType="life.leeray.community.model.Question" >
     update question
     set title = #{title,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=BIGINT},
@@ -338,172 +338,34 @@
       tag = #{tag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <resultMap id="BaseResultMap" type="life.leeray.community.model.Question">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate" />
-    <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified" />
-    <result column="creator" jdbcType="INTEGER" property="creator" />
-    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
-    <result column="view_count" jdbcType="INTEGER" property="viewCount" />
-    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
-    <result column="tag" jdbcType="VARCHAR" property="tag" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="life.leeray.community.model.Question">
-    <result column="description" jdbcType="LONGVARCHAR" property="description" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, title, gmt_create, gmt_modified, creator, comment_count, view_count, like_count, 
-    tag
-  </sql>
-  <sql id="Blob_Column_List">
-    description
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
-    select 
+  <select resultMap="ResultMapWithBLOBs" parameterType="life.leeray.community.model.QuestionExample" id="selectByExampleWithBLOBsWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from question
-    where id = #{id,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from question
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="life.leeray.community.model.Question">
-    insert into question (id, title, gmt_create, 
-      gmt_modified, creator, comment_count, 
-      view_count, like_count, tag, 
-      description)
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=BIGINT}, 
-      #{gmtModified,jdbcType=BIGINT}, #{creator,jdbcType=INTEGER}, #{commentCount,jdbcType=INTEGER}, 
-      #{viewCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}, #{tag,jdbcType=VARCHAR}, 
-      #{description,jdbcType=LONGVARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="life.leeray.community.model.Question">
-    insert into question
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="gmtCreate != null">
-        gmt_create,
-      </if>
-      <if test="gmtModified != null">
-        gmt_modified,
-      </if>
-      <if test="creator != null">
-        creator,
-      </if>
-      <if test="commentCount != null">
-        comment_count,
-      </if>
-      <if test="viewCount != null">
-        view_count,
-      </if>
-      <if test="likeCount != null">
-        like_count,
-      </if>
-      <if test="tag != null">
-        tag,
-      </if>
-      <if test="description != null">
-        description,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="gmtCreate != null">
-        #{gmtCreate,jdbcType=BIGINT},
-      </if>
-      <if test="gmtModified != null">
-        #{gmtModified,jdbcType=BIGINT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=INTEGER},
-      </if>
-      <if test="commentCount != null">
-        #{commentCount,jdbcType=INTEGER},
-      </if>
-      <if test="viewCount != null">
-        #{viewCount,jdbcType=INTEGER},
-      </if>
-      <if test="likeCount != null">
-        #{likeCount,jdbcType=INTEGER},
-      </if>
-      <if test="tag != null">
-        #{tag,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        #{description,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="life.leeray.community.model.Question">
-    update question
-    <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="gmtCreate != null">
-        gmt_create = #{gmtCreate,jdbcType=BIGINT},
-      </if>
-      <if test="gmtModified != null">
-        gmt_modified = #{gmtModified,jdbcType=BIGINT},
-      </if>
-      <if test="creator != null">
-        creator = #{creator,jdbcType=INTEGER},
-      </if>
-      <if test="commentCount != null">
-        comment_count = #{commentCount,jdbcType=INTEGER},
-      </if>
-      <if test="viewCount != null">
-        view_count = #{viewCount,jdbcType=INTEGER},
-      </if>
-      <if test="likeCount != null">
-        like_count = #{likeCount,jdbcType=INTEGER},
-      </if>
-      <if test="tag != null">
-        tag = #{tag,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        description = #{description,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="life.leeray.community.model.Question">
-    update question
-    set title = #{title,jdbcType=VARCHAR},
-      gmt_create = #{gmtCreate,jdbcType=BIGINT},
-      gmt_modified = #{gmtModified,jdbcType=BIGINT},
-      creator = #{creator,jdbcType=INTEGER},
-      comment_count = #{commentCount,jdbcType=INTEGER},
-      view_count = #{viewCount,jdbcType=INTEGER},
-      like_count = #{likeCount,jdbcType=INTEGER},
-      tag = #{tag,jdbcType=VARCHAR},
-      description = #{description,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="life.leeray.community.model.Question">
-    update question
-    set title = #{title,jdbcType=VARCHAR},
-      gmt_create = #{gmtCreate,jdbcType=BIGINT},
-      gmt_modified = #{gmtModified,jdbcType=BIGINT},
-      creator = #{creator,jdbcType=INTEGER},
-      comment_count = #{commentCount,jdbcType=INTEGER},
-      view_count = #{viewCount,jdbcType=INTEGER},
-      like_count = #{likeCount,jdbcType=INTEGER},
-      tag = #{tag,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+  <select resultMap="BaseResultMap" parameterType="life.leeray.community.model.QuestionExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from question
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

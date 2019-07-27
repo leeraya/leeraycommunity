@@ -13,3 +13,5 @@ mybatis:
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: life.leeray.community.mapper

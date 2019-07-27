@@ -5,7 +5,9 @@ import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.mapper.QuestionMapper;
 import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.Question;
+import life.leeray.community.model.QuestionExample;
 import life.leeray.community.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,18 +38,20 @@ public class QuestionService {
     }
 
     public PaginationDTO list(Integer page, Integer size) {
-        Integer count = questionMapper.count();
+        Integer count = questionMapper.countByExample(new QuestionExample());
         page = validator(page, size, count);
         //计算用于limit m,n所需的m值
         Integer offset = size * (page - 1);
-        List<Question> list = questionMapper.list(offset, size);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("gmt_modified DESC");
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList();
 
-        if (list != null || list.size() != 0) {
-            for (int i = 0; i < list.size(); i++) {
-                Question question = list.get(i);
+        if (questions != null || questions.size() != 0) {
+            for (int i = 0; i < questions.size(); i++) {
+                Question question = questions.get(i);
                 QuestionDTO questionDTO = new QuestionDTO();
-                User user = userMapper.findById(question.getCreator());
+                User user = userMapper.selectByPrimaryKey(question.getCreator());
                 questionDTO.setQuestion(question);
                 questionDTO.setUser(user);
                 questionDTOList.add(questionDTO);
@@ -60,18 +64,24 @@ public class QuestionService {
     }
 
     public PaginationDTO list(Integer id, Integer page, Integer size) {
-        Integer count = questionMapper.countByUserId(id);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria().andCreatorEqualTo(id);
+        Integer count = questionMapper.countByExample(questionExample);
         page = validator(page, size, count);
         //计算用于limit m,n所需的m值
         Integer offset = size * (page - 1);
-        List<Question> list = questionMapper.listByUserId(id,offset, size);
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCreatorEqualTo(id);
+        example.setOrderByClause("gmt_modified DESC");
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
+
         List<QuestionDTO> questionDTOList = new ArrayList();
 
-        if (list != null || list.size() != 0) {
-            for (int i = 0; i < list.size(); i++) {
-                Question question = list.get(i);
+        if (questions != null || questions.size() != 0) {
+            for (int i = 0; i < questions.size(); i++) {
+                Question question = questions.get(i);
                 QuestionDTO questionDTO = new QuestionDTO();
-                User user = userMapper.findById(question.getCreator());
+                User user = userMapper.selectByPrimaryKey(question.getCreator());
                 questionDTO.setQuestion(question);
                 questionDTO.setUser(user);
                 questionDTOList.add(questionDTO);
@@ -84,8 +94,8 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Integer id) {
-        Question question = questionMapper.getById(id);
-        User user = userMapper.findById(question.getCreator());
+        Question question = questionMapper.selectByPrimaryKey(id);
+        User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setQuestion(question);
         questionDTO.setUser(user);
@@ -93,15 +103,22 @@ public class QuestionService {
     }
 
     public void createOrUpdate(Question question) {
-        if (null == question.getId()){
+        if (null == question.getId()) {
             //如果没有id，那么说明是新发布的，直接存入数据库。
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
-            questionMapper.create(question);
-        }else {
+            questionMapper.insertSelective(question);
+        } else {
             //是更新的发布
-            question.setGmtModified(System.currentTimeMillis());
-            questionMapper.update(question);
+            Question updateQuestion = new Question();
+            updateQuestion.setGmtModified(System.currentTimeMillis());
+            updateQuestion.setTitle(question.getTitle());
+            updateQuestion.setDescription(question.getDescription());
+            updateQuestion.setTag(question.getTag());
+
+            QuestionExample questionExample = new QuestionExample();
+            questionExample.createCriteria().andIdEqualTo(question.getId());
+            questionMapper.updateByExampleSelective(updateQuestion, questionExample);
         }
     }
 }

@@ -62,7 +62,10 @@ public class PublishController {
             model.addAttribute("error", "用户未登录，无权发表主题");
             return "publish";
         }
-        Question question = new Question(title, description, tag);
+        Question question = new Question();
+        question.setTitle(title);
+        question.setDescription(description);
+        question.setTag(tag);
         question.setCreator(user.getId());
         question.setId(id);
         questionService.createOrUpdate(question);

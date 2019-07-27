@@ -15,11 +15,7 @@ public class CommunityApplicationTests {
 
     @Autowired
     UserMapper userMapper;
-    @Test
-    public void contextLoads() {
-        User user = userMapper.findById(1);
-        System.out.println(user.toString());
-    }
+
 
     @Value("${spring.datasource.username}")
     String name;

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author leeray
@@ -24,7 +25,7 @@ public class ProfileController {
     @Autowired
     QuestionService questionService;
 
-    @GetMapping("/profile/{action}")
+    @GetMapping(value = "/profile/{action}",produces = "text/plain;charset=UTF-8")
     public String profile(@PathVariable(name = "action") String action,
                           Model model,
                           HttpServletRequest request,
