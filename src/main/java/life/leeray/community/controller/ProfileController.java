@@ -25,7 +25,7 @@ public class ProfileController {
     @Autowired
     QuestionService questionService;
 
-    @GetMapping(value = "/profile/{action}",produces = "text/plain;charset=UTF-8")
+    @GetMapping(value = "/profile/{action}")
     public String profile(@PathVariable(name = "action") String action,
                           Model model,
                           HttpServletRequest request,
