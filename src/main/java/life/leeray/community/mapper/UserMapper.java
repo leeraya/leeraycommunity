@@ -1,10 +1,7 @@
 package life.leeray.community.mapper;
 
 import life.leeray.community.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.springframework.stereotype.Service;
+import org.apache.ibatis.annotations.*;
 
 /**
  * @author leeray
@@ -18,8 +15,15 @@ public interface UserMapper {
     void insertUser(User user);
 
     @Select("SELECT * FROM user WHERE token = #{token}")
-    User findByToken(String token);
+    User findByToken(@Param("token") String token);
 
     @Select("SELECT * FROM user WHERE id = #{id}")
     User findById(Integer id);
+
+    @Select("SELECT * FROM user WHERE account_id = #{accountId}")
+    User findByAccountId(@Param("accountId") String accountId);
+
+    @Update("UPDATE user SET name=#{name},token=#{token},gmt_modified=#{gmtModified},avatar_url=#{avatarUrl}" +
+            "where id = #{id}")
+    void update(User user);
 }
