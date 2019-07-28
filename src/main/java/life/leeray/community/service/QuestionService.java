@@ -4,6 +4,7 @@ import life.leeray.community.dto.PaginationDTO;
 import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.exception.CustomizeErrorCode;
 import life.leeray.community.exception.CustomizeException;
+import life.leeray.community.mapper.QuestionExtMapper;
 import life.leeray.community.mapper.QuestionMapper;
 import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.Question;
@@ -30,6 +31,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public static Integer validator(Integer page, Integer size, Integer count) {
         //边界验证，容错处理
@@ -128,5 +132,17 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    /**
+     * 增加浏览数
+     *
+     * @param id 被点击的问题的id
+     */
+    public void incView(Integer id) {
+        Question record = new Question();
+        record.setId(id);
+        record.setViewCount(1);
+        questionExtMapper.incView(record);
     }
 }
