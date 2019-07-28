@@ -294,52 +294,52 @@ public class CommentExample {
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorEqualTo(Integer value) {
+        public Criteria andCommentatorEqualTo(Long value) {
             addCriterion("commentator =", value, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorNotEqualTo(Integer value) {
+        public Criteria andCommentatorNotEqualTo(Long value) {
             addCriterion("commentator <>", value, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorGreaterThan(Integer value) {
+        public Criteria andCommentatorGreaterThan(Long value) {
             addCriterion("commentator >", value, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCommentatorGreaterThanOrEqualTo(Long value) {
             addCriterion("commentator >=", value, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorLessThan(Integer value) {
+        public Criteria andCommentatorLessThan(Long value) {
             addCriterion("commentator <", value, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorLessThanOrEqualTo(Integer value) {
+        public Criteria andCommentatorLessThanOrEqualTo(Long value) {
             addCriterion("commentator <=", value, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorIn(List<Integer> values) {
+        public Criteria andCommentatorIn(List<Long> values) {
             addCriterion("commentator in", values, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorNotIn(List<Integer> values) {
+        public Criteria andCommentatorNotIn(List<Long> values) {
             addCriterion("commentator not in", values, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorBetween(Integer value1, Integer value2) {
+        public Criteria andCommentatorBetween(Long value1, Long value2) {
             addCriterion("commentator between", value1, value2, "commentator");
             return (Criteria) this;
         }
 
-        public Criteria andCommentatorNotBetween(Integer value1, Integer value2) {
+        public Criteria andCommentatorNotBetween(Long value1, Long value2) {
             addCriterion("commentator not between", value1, value2, "commentator");
             return (Criteria) this;
         }
@@ -521,6 +521,76 @@ public class CommentExample {
 
         public Criteria andLikeCountNotBetween(Long value1, Long value2) {
             addCriterion("like_count not between", value1, value2, "likeCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentIsNull() {
+            addCriterion("content is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentIsNotNull() {
+            addCriterion("content is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentEqualTo(String value) {
+            addCriterion("content =", value, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentNotEqualTo(String value) {
+            addCriterion("content <>", value, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentGreaterThan(String value) {
+            addCriterion("content >", value, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentGreaterThanOrEqualTo(String value) {
+            addCriterion("content >=", value, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentLessThan(String value) {
+            addCriterion("content <", value, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentLessThanOrEqualTo(String value) {
+            addCriterion("content <=", value, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentLike(String value) {
+            addCriterion("content like", value, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentNotLike(String value) {
+            addCriterion("content not like", value, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentIn(List<String> values) {
+            addCriterion("content in", values, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentNotIn(List<String> values) {
+            addCriterion("content not in", values, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentBetween(String value1, String value2) {
+            addCriterion("content between", value1, value2, "content");
+            return (Criteria) this;
+        }
+
+        public Criteria andContentNotBetween(String value1, String value2) {
+            addCriterion("content not between", value1, value2, "content");
             return (Criteria) this;
         }
     }

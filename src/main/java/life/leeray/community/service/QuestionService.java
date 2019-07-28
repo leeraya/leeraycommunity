@@ -14,7 +14,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +68,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(Integer id, Integer page, Integer size) {
+    public PaginationDTO list(Long id, Integer page, Integer size) {
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(id);
         Integer count = questionMapper.countByExample(questionExample);
@@ -99,7 +98,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
@@ -139,7 +138,7 @@ public class QuestionService {
      *
      * @param id 被点击的问题的id
      */
-    public void incView(Integer id) {
+    public void incView(Long id) {
         Question record = new Question();
         record.setId(id);
         record.setViewCount(1);

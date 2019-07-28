@@ -10,6 +10,7 @@ public class CustomizeException extends RuntimeException {
     private Integer code;
 
     public CustomizeException(ICustomizeErrorCode errorCode) {
+        this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
     }
 

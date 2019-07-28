@@ -7,13 +7,15 @@ public class Comment {
 
     private Integer type;
 
-    private Integer commentator;
+    private Long commentator;
 
     private Long gmtCreate;
 
     private Long gmtModified;
 
     private Long likeCount;
+
+    private String content;
 
     public Long getId() {
         return id;
@@ -39,11 +41,11 @@ public class Comment {
         this.type = type;
     }
 
-    public Integer getCommentator() {
+    public Long getCommentator() {
         return commentator;
     }
 
-    public void setCommentator(Integer commentator) {
+    public void setCommentator(Long commentator) {
         this.commentator = commentator;
     }
 
@@ -69,5 +71,13 @@ public class Comment {
 
     public void setLikeCount(Long likeCount) {
         this.likeCount = likeCount;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 }
