@@ -10,6 +10,7 @@ import life.leeray.community.model.Comment;
 import life.leeray.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author leeray
@@ -28,6 +29,8 @@ public class CommentService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
+
+    @Transactional  //添加事务
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
