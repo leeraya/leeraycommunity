@@ -9,10 +9,7 @@ import life.leeray.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +24,9 @@ public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private QuestionMapper questionMapper;
+
     @GetMapping("/publish")
     public String publish() {
         return "publish";
@@ -35,7 +35,7 @@ public class PublishController {
     @PostMapping("/publish")
     public String doPublish(HttpServletRequest request,
                             Model model,
-                            @RequestParam(value = "id",required = false)Long id) {
+                            @RequestParam(value = "id", required = false) Long id) {
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         String tag = request.getParameter("tag");
@@ -73,13 +73,21 @@ public class PublishController {
     }
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable("id") Long id, Model model) {
-        if (id != null) {
-            QuestionDTO question = questionService.getById(id);
-            model.addAttribute("title", question.getQuestion().getTitle());
-            model.addAttribute("description", question.getQuestion().getDescription());
-            model.addAttribute("tag", question.getQuestion().getTag());
-            model.addAttribute("id", question.getQuestion().getId());
+    public String edit(@PathVariable("id") Long id,
+                       Model model,
+                       HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        if (id != null ) {
+            Question dbQuestion = questionMapper.selectByPrimaryKey(id);
+            if (user.getId() == dbQuestion.getCreator()) {
+                QuestionDTO question = questionService.getById(id);
+                model.addAttribute("title", question.getQuestion().getTitle());
+                model.addAttribute("description", question.getQuestion().getDescription());
+                model.addAttribute("tag", question.getQuestion().getTag());
+                model.addAttribute("id", question.getQuestion().getId());
+            } else {
+                return "redirect:/";
+            }
         }
         return "publish";
     }
