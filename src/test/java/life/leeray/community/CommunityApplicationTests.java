@@ -21,8 +21,9 @@ public class CommunityApplicationTests {
     String name;
     @Value("${spring.datasource.password}")
     String password;
+
     @Test
-    public void Test(){
-        System.out.println(name+" "+password);
+    public void Test() {
+        System.out.println(name + " " + password);
     }
 }

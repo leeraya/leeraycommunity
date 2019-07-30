@@ -6,6 +6,7 @@ package life.leeray.community.exception;
  * @date 2019/7/28 0028 9:39
  */
 public interface ICustomizeErrorCode {
-    String getMessage() ;
+    String getMessage();
+
     Integer getCode();
 }

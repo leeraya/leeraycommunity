@@ -77,7 +77,7 @@ public class PublishController {
                        Model model,
                        HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
-        if (id != null ) {
+        if (id != null) {
             Question dbQuestion = questionMapper.selectByPrimaryKey(id);
             if (user.getId() == dbQuestion.getCreator()) {
                 QuestionDTO question = questionService.getById(id);

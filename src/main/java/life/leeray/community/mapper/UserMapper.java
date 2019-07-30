@@ -1,6 +1,7 @@
 package life.leeray.community.mapper;
 
 import java.util.List;
+
 import life.leeray.community.model.User;
 import life.leeray.community.model.UserExample;
 import org.apache.ibatis.annotations.Param;

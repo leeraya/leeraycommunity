@@ -29,7 +29,7 @@ public class ResultDTO {
     }
 
     public static ResultDTO errorOf(CustomizeException ex) {
-        return errorOf(ex.getCode(),ex.getMessage());
+        return errorOf(ex.getCode(), ex.getMessage());
     }
 
     public static ResultDTO okOff() {
