@@ -33,6 +33,10 @@ public class ResultDTO {
     }
 
     public static ResultDTO okOff() {
-        return errorOf(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(200);
+        resultDTO.setMessage("请求成功");
+        return resultDTO;
     }
+
 }
