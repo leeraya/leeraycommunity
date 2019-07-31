@@ -1,8 +1,6 @@
 package life.leeray.community.controller;
 
 import life.leeray.community.dto.PaginationDTO;
-import life.leeray.community.mapper.QuestionMapper;
-import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

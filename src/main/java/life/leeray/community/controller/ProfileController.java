@@ -1,7 +1,6 @@
 package life.leeray.community.controller;
 
 import life.leeray.community.dto.PaginationDTO;
-import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.User;
 import life.leeray.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author leeray

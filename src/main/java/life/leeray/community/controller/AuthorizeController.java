@@ -2,7 +2,6 @@ package life.leeray.community.controller;
 
 import life.leeray.community.dto.AccessTokenDTO;
 import life.leeray.community.dto.GithubUser;
-import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.User;
 import life.leeray.community.provider.GithubProvider;
 import life.leeray.community.service.UserService;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

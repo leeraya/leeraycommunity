@@ -3,7 +3,6 @@ package life.leeray.community.controller;
 import life.leeray.community.dto.CommentDTO;
 import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.enums.ContentTypeEnum;
-import life.leeray.community.model.Question;
 import life.leeray.community.model.User;
 import life.leeray.community.service.CommentService;
 import life.leeray.community.service.QuestionService;

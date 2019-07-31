@@ -3,7 +3,6 @@ package life.leeray.community.provider;
 import com.alibaba.fastjson.JSON;
 import life.leeray.community.dto.AccessTokenDTO;
 import life.leeray.community.dto.GithubUser;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 

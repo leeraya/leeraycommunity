@@ -3,14 +3,17 @@ package life.leeray.community.controller;
 import life.leeray.community.cache.TagCache;
 import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.mapper.QuestionMapper;
-import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.Question;
 import life.leeray.community.model.User;
 import life.leeray.community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,6 +59,11 @@ public class PublishController {
         }
         if (tag == null || tag.equals("")) {
             model.addAttribute("error", "标签不能为空！");
+            return "publish";
+        }
+        String invalidTag = TagCache.filterInvalid(tag);
+        if (StringUtils.isNotBlank(invalidTag)){
+            model.addAttribute("error", "包含不支持的标签："+invalidTag);
             return "publish";
         }
 

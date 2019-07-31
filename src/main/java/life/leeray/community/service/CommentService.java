@@ -1,6 +1,5 @@
 package life.leeray.community.service;
 
-import com.sun.xml.internal.stream.events.CommentEvent;
 import life.leeray.community.dto.CommentDTO;
 import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.enums.ContentTypeEnum;
