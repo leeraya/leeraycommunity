@@ -1,5 +1,6 @@
 package life.leeray.community.controller;
 
+import life.leeray.community.cache.TagCache;
 import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.mapper.QuestionMapper;
 import life.leeray.community.mapper.UserMapper;
@@ -28,7 +29,8 @@ public class PublishController {
     private QuestionMapper questionMapper;
 
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -85,6 +87,7 @@ public class PublishController {
                 model.addAttribute("description", question.getQuestion().getDescription());
                 model.addAttribute("tag", question.getQuestion().getTag());
                 model.addAttribute("id", question.getQuestion().getId());
+                model.addAttribute("tags", TagCache.get());
             } else {
                 return "redirect:/";
             }
