@@ -2,20 +2,19 @@ package life.leeray.community.service;
 
 import com.sun.xml.internal.stream.events.CommentEvent;
 import life.leeray.community.dto.CommentDTO;
+import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.enums.ContentTypeEnum;
 import life.leeray.community.exception.CustomizeErrorCode;
 import life.leeray.community.exception.CustomizeException;
 import life.leeray.community.mapper.*;
 import life.leeray.community.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -103,5 +102,30 @@ public class CommentService {
             return commentDTO;
         }).collect(Collectors.toList());
         return commentDTOS;
+    }
+
+    /**
+     * 查找相关问题
+     *
+     * @param queryDTO :包含问题id tag等属性的QuestionDTO对象
+     * @return：返回相关问题列表
+     */
+    public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
+        if (StringUtils.isBlank(queryDTO.getQuestion().getTag())) {
+            return new ArrayList<>();
+        }
+        String[] tags = StringUtils.split(queryDTO.getQuestion().getTag(), ",");
+        String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
+        Question question = new Question();
+        question.setId(queryDTO.getQuestion().getId());
+        question.setTag(regexpTag);
+
+        List<Question> questions = questionExtMapper.selectRelated(question);
+        List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            questionDTO.setQuestion(q);
+            return questionDTO;
+        }).collect(Collectors.toList());
+        return questionDTOS;
     }
 }

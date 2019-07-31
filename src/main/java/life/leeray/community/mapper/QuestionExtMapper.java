@@ -2,6 +2,8 @@ package life.leeray.community.mapper;
 
 import life.leeray.community.model.Question;
 
+import java.util.List;
+
 /**
  * @author leeray
  * @version 1.0
@@ -11,4 +13,6 @@ public interface QuestionExtMapper {
     int incView(Question record);
 
     int incComment(Question record);
+
+    List<Question> selectRelated(Question question);
 }
