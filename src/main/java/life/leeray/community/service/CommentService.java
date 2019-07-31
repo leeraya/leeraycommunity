@@ -1,13 +1,11 @@
 package life.leeray.community.service;
 
+import com.sun.xml.internal.stream.events.CommentEvent;
 import life.leeray.community.dto.CommentDTO;
 import life.leeray.community.enums.ContentTypeEnum;
 import life.leeray.community.exception.CustomizeErrorCode;
 import life.leeray.community.exception.CustomizeException;
-import life.leeray.community.mapper.CommentMapper;
-import life.leeray.community.mapper.QuestionExtMapper;
-import life.leeray.community.mapper.QuestionMapper;
-import life.leeray.community.mapper.UserMapper;
+import life.leeray.community.mapper.*;
 import life.leeray.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,8 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CommentExtMapper commentExtMapper;
 
     @Transactional  //添加事务
     public void insert(Comment comment) {
@@ -55,6 +55,11 @@ public class CommentService {
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.incComment(parentComment);//增加评论数
+
             commentMapper.insertSelective(comment);
         } else {
             //回复问题
@@ -69,14 +74,14 @@ public class CommentService {
     }
 
     /**
-     * @param id:问题id
-     * @return:返回该问题的所有评论
+     * @param id:问题或评论id
+     * @return:返回该问题或评论的所有评论
      */
-    public List<CommentDTO> listByQuestionId(Long id) {
+    public List<CommentDTO> listByTargetId(Long id, ContentTypeEnum contentTypeEnum) {
         CommentExample example = new CommentExample();
         example.setOrderByClause("gmt_create desc");
         example.createCriteria().andParentIdEqualTo(id)
-                .andTypeEqualTo(ContentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(contentTypeEnum.getType());
         List<Comment> comments = commentMapper.selectByExample(example);
         if (comments.size() == 0) {
             return new ArrayList<>();
