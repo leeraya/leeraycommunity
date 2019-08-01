@@ -18,6 +18,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(sessionIntercepter).addPathPatterns("/**");
+        registry.addInterceptor(sessionIntercepter).addPathPatterns("/**").excludePathPatterns("/druid/**");
     }
 }
