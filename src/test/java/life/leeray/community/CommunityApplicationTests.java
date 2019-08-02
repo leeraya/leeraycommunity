@@ -25,5 +25,6 @@ public class CommunityApplicationTests {
     public void Test() {
         System.out.println(name + " " + password);
     }
+//
 
 }
