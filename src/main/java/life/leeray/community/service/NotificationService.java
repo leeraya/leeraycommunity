@@ -68,12 +68,18 @@ public class NotificationService {
             return paginationDTO;
         }
         List<NotificationDTO> notificationDTOS = new ArrayList();
-        for (Notification notification : notifications) {
+        /*for (Notification notification : notifications) {
             NotificationDTO notificationDTO = new NotificationDTO();
             BeanUtils.copyProperties(notification, notificationDTO);
             notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
             notificationDTOS.add(notificationDTO);
-        }
+        }*/
+        notifications.stream().forEach(notification -> {
+            NotificationDTO notificationDTO = new NotificationDTO();
+            BeanUtils.copyProperties(notification, notificationDTO);
+            notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
+            notificationDTOS.add(notificationDTO);
+        });
         paginationDTO.setData(notificationDTOS);
         paginationDTO.setPagination(count, page, size);
         return paginationDTO;
