@@ -3,6 +3,7 @@ package life.leeray.community.intercepter;
 import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.User;
 import life.leeray.community.model.UserExample;
+import life.leeray.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -23,6 +24,9 @@ public class SessionIntercepter implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
@@ -35,6 +39,9 @@ public class SessionIntercepter implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
                     if (users.size() != 0) {
                         request.getSession().setAttribute("user", users.get(0));
+                        int unreadCount = notificationService.unreadCount(users.get(0).getId());
+                        request.getSession().setAttribute("unreadCount", unreadCount);
+
                     }
                     break;
                 }

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author leeray
  * @version 1.0
- * @date 2019/7/28 0028 10:43
+ * @date 2019/7/28  10:43
  */
 @Controller
 @RequestMapping("${server.error.path:${error.path:/error}}")
