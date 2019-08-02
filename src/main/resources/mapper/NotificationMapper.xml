@@ -9,6 +9,8 @@
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="gmt_create" property="gmtCreate" jdbcType="BIGINT" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="notifier_name" property="notifierName" jdbcType="VARCHAR" />
+    <result column="outer_title" property="outerTitle" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -69,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, notifier, receiver, outerId, type, gmt_create, status
+    id, notifier, receiver, outerId, type, gmt_create, status, notifier_name, outer_title
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="life.leeray.community.model.NotificationExample" >
     select
@@ -104,10 +106,12 @@
   <insert id="insert" parameterType="life.leeray.community.model.Notification" >
     insert into notification (id, notifier, receiver, 
       outerId, type, gmt_create, 
-      status)
+      status, notifier_name, outer_title
+      )
     values (#{id,jdbcType=BIGINT}, #{notifier,jdbcType=BIGINT}, #{receiver,jdbcType=BIGINT}, 
       #{outerid,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{gmtCreate,jdbcType=BIGINT}, 
-      #{status,jdbcType=INTEGER})
+      #{status,jdbcType=INTEGER}, #{notifierName,jdbcType=VARCHAR}, #{outerTitle,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="life.leeray.community.model.Notification" >
     insert into notification
@@ -133,6 +137,12 @@
       <if test="status != null" >
         status,
       </if>
+      <if test="notifierName != null" >
+        notifier_name,
+      </if>
+      <if test="outerTitle != null" >
+        outer_title,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -155,6 +165,12 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="notifierName != null" >
+        #{notifierName,jdbcType=VARCHAR},
+      </if>
+      <if test="outerTitle != null" >
+        #{outerTitle,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -188,6 +204,12 @@
       <if test="record.status != null" >
         status = #{record.status,jdbcType=INTEGER},
       </if>
+      <if test="record.notifierName != null" >
+        notifier_name = #{record.notifierName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outerTitle != null" >
+        outer_title = #{record.outerTitle,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -201,7 +223,9 @@
       outerId = #{record.outerid,jdbcType=BIGINT},
       type = #{record.type,jdbcType=INTEGER},
       gmt_create = #{record.gmtCreate,jdbcType=BIGINT},
-      status = #{record.status,jdbcType=INTEGER}
+      status = #{record.status,jdbcType=INTEGER},
+      notifier_name = #{record.notifierName,jdbcType=VARCHAR},
+      outer_title = #{record.outerTitle,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -227,6 +251,12 @@
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
+      <if test="notifierName != null" >
+        notifier_name = #{notifierName,jdbcType=VARCHAR},
+      </if>
+      <if test="outerTitle != null" >
+        outer_title = #{outerTitle,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -237,7 +267,9 @@
       outerId = #{outerid,jdbcType=BIGINT},
       type = #{type,jdbcType=INTEGER},
       gmt_create = #{gmtCreate,jdbcType=BIGINT},
-      status = #{status,jdbcType=INTEGER}
+      status = #{status,jdbcType=INTEGER},
+      notifier_name = #{notifierName,jdbcType=VARCHAR},
+      outer_title = #{outerTitle,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select resultMap="BaseResultMap" parameterType="life.leeray.community.model.NotificationExample" id="selectByExampleWithRowbounds" >

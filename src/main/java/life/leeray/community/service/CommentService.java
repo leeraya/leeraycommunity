@@ -3,6 +3,8 @@ package life.leeray.community.service;
 import life.leeray.community.dto.CommentDTO;
 import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.enums.ContentTypeEnum;
+import life.leeray.community.enums.NotificationStatusEnum;
+import life.leeray.community.enums.NotificationTypeEnum;
 import life.leeray.community.exception.CustomizeErrorCode;
 import life.leeray.community.exception.CustomizeException;
 import life.leeray.community.mapper.*;
@@ -43,7 +45,7 @@ public class CommentService {
     private NotificationMapper notificationMapper;
 
     @Transactional  //添加事务
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User commentator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -56,12 +58,20 @@ public class CommentService {
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            //回复问题
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
             Comment parentComment = new Comment();
             parentComment.setId(comment.getParentId());
             parentComment.setCommentCount(1);
-            commentExtMapper.incComment(parentComment);//增加评论数
-
+            //增加评论数
+            commentExtMapper.incComment(parentComment);
+            //保存评论
             commentMapper.insertSelective(comment);
+            //创建通知
+            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
         } else {
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -71,7 +81,34 @@ public class CommentService {
             commentMapper.insertSelective(comment);
             question.setCommentCount(1);
             questionExtMapper.incComment(question);
+            //创建通知
+            createNotify(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_QUESTION, question.getId());
         }
+    }
+
+    /**
+     * 创建通知方法
+     *
+     * @param comment
+     * @param receiver
+     * @param notifierName
+     * @param outerTitle
+     * @param notificationTypeEnum
+     * @param outerid
+     */
+    private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationTypeEnum, Long outerid) {
+        //创建通知并保存
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(notificationTypeEnum.getType());
+        notification.setOuterid(outerid);
+        notification.setNotifier(comment.getCommentator());
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setReceiver(receiver);
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+
+        notificationMapper.insert(notification);
     }
 
     /**

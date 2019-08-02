@@ -63,11 +63,18 @@ public class QuestionService {
             }
         }
         PaginationDTO paginationDTO = new PaginationDTO();
-        paginationDTO.setQuestion(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         paginationDTO.setPagination(count, page, size);
         return paginationDTO;
     }
 
+    /**
+     *
+     * @param id
+     * @param page
+     * @param size
+     * @return
+     */
     public PaginationDTO list(Long id, Integer page, Integer size) {
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(id);
@@ -78,7 +85,7 @@ public class QuestionService {
         QuestionExample example = new QuestionExample();
         example.createCriteria().andCreatorEqualTo(id);
         example.setOrderByClause("gmt_modified DESC");
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample, new RowBounds(offset, size));
+        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
 
         List<QuestionDTO> questionDTOList = new ArrayList();
 
@@ -93,7 +100,7 @@ public class QuestionService {
             }
         }
         PaginationDTO paginationDTO = new PaginationDTO();
-        paginationDTO.setQuestion(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         paginationDTO.setPagination(count, page, size);
         return paginationDTO;
     }

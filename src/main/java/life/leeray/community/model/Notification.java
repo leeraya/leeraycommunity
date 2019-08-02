@@ -15,6 +15,10 @@ public class Notification {
 
     private Integer status;
 
+    private String notifierName;
+
+    private String outerTitle;
+
     public Long getId() {
         return id;
     }
@@ -69,5 +73,21 @@ public class Notification {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getNotifierName() {
+        return notifierName;
+    }
+
+    public void setNotifierName(String notifierName) {
+        this.notifierName = notifierName == null ? null : notifierName.trim();
+    }
+
+    public String getOuterTitle() {
+        return outerTitle;
+    }
+
+    public void setOuterTitle(String outerTitle) {
+        this.outerTitle = outerTitle == null ? null : outerTitle.trim();
     }
 }
