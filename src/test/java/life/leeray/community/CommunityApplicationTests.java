@@ -1,7 +1,6 @@
 package life.leeray.community;
 
 import life.leeray.community.mapper.UserMapper;
-import life.leeray.community.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +25,5 @@ public class CommunityApplicationTests {
     public void Test() {
         System.out.println(name + " " + password);
     }
+
 }
