@@ -1,7 +1,6 @@
 package life.leeray.community.controller;
 
 import life.leeray.community.dto.PaginationDTO;
-import life.leeray.community.mapper.QuestionMapper;
 import life.leeray.community.model.User;
 import life.leeray.community.service.NotificationService;
 import life.leeray.community.service.QuestionService;
