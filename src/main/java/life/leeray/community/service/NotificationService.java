@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -51,6 +52,16 @@ public class NotificationService {
         example.createCriteria().andReceiverEqualTo(id);
         example.setOrderByClause("gmt_create DESC");
         List<Notification> notifications = notificationMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
+        //未读的消息总是排前面，如果未读状态相同，那才按时间顺序倒序排。使用lambda表达式。
+        Collections.sort(notifications, (o1, o2) -> {
+            if (o1.getStatus() == 0 && o2.getStatus() == 1) {
+                return -1;
+            } else if (o1.getStatus() == 1 && o2.getStatus() == 0) {
+                return 1;
+            } else {
+                return (int) (o2.getGmtCreate() - o1.getGmtCreate());
+            }
+        });
         PaginationDTO paginationDTO = new PaginationDTO();
 
         if (notifications == null || notifications.size() == 0) {
