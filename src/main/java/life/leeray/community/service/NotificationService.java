@@ -68,12 +68,7 @@ public class NotificationService {
             return paginationDTO;
         }
         List<NotificationDTO> notificationDTOS = new ArrayList();
-        /*for (Notification notification : notifications) {
-            NotificationDTO notificationDTO = new NotificationDTO();
-            BeanUtils.copyProperties(notification, notificationDTO);
-            notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
-            notificationDTOS.add(notificationDTO);
-        }*/
+        
         notifications.stream().forEach(notification -> {
             NotificationDTO notificationDTO = new NotificationDTO();
             BeanUtils.copyProperties(notification, notificationDTO);
@@ -85,6 +80,12 @@ public class NotificationService {
         return paginationDTO;
     }
 
+    /**
+     * 获取为读的通知数量
+     *
+     * @param id
+     * @return
+     */
     public int unreadCount(Long id) {
         NotificationExample example = new NotificationExample();
         example.createCriteria().andReceiverEqualTo(id)
@@ -112,13 +113,13 @@ public class NotificationService {
     /**
      * 删除通知的方法
      *
-     * @param id 通知的id
+     * @param id   通知的id
      * @param user
      */
     public void delete(Long id, User user) {
         Notification notification = notificationMapper.selectByPrimaryKey(id);
         //如果通知确实存在并且通知确实是当前用户的，那么删除它。
-        if (notification != null && notification.getReceiver().equals(user.getId())){
+        if (notification != null && notification.getReceiver().equals(user.getId())) {
             notificationMapper.deleteByPrimaryKey(id);
         }
     }

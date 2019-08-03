@@ -60,7 +60,8 @@
                             </a>
                             <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
                             <span class="label label-warning" th:if="${notification.status == 1}">
-                                <a th:href="@{'/notification/delete'+'?id='+${notification.id}+'&'+'page='+${pagination.page}+'&'+'size=5'}" style="color: white">删除</a>
+                                <a th:href="@{'/notification/delete'+'?id='+${notification.id} +'&page='+${pagination.page} +'&size=5'}"
+                                   style="color: white">删除</a>
                             </span>
                         </span>
                         <div>[[${#dates.format(notification.gmtCreate,'yyyy-MM-dd HH:mm')}]]</div>
