@@ -108,4 +108,18 @@ public class NotificationService {
         notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
         return notificationDTO;
     }
+
+    /**
+     * 删除通知的方法
+     *
+     * @param id 通知的id
+     * @param user
+     */
+    public void delete(Long id, User user) {
+        Notification notification = notificationMapper.selectByPrimaryKey(id);
+        //如果通知确实存在并且通知确实是当前用户的，那么删除它。
+        if (notification != null && notification.getReceiver().equals(user.getId())){
+            notificationMapper.deleteByPrimaryKey(id);
+        }
+    }
 }

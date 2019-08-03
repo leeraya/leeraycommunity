@@ -1,14 +1,14 @@
 package life.leeray.community.controller;
 
 import life.leeray.community.dto.NotificationDTO;
+import life.leeray.community.dto.PaginationDTO;
 import life.leeray.community.enums.NotificationTypeEnum;
 import life.leeray.community.model.User;
 import life.leeray.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,5 +38,24 @@ public class NotificationController {
         } else {
             return "redirect:/";
         }
+    }
+
+    @RequestMapping(value = "/notification/delete")
+    public String deleteNotification(@RequestParam(name = "id") Long id,
+                                     @RequestParam(name = "page", defaultValue = "1") Integer page,
+                                     @RequestParam(name = "size", defaultValue = "5") Integer size,
+                                     HttpServletRequest request,
+                                     Model model) {
+        User user = (User) request.getSession().getAttribute("user");
+        //通过非法方式进入直接返回首页
+        if (user == null) {
+            return "redirect:/";
+        }
+        notificationService.delete(id, user);
+        PaginationDTO pagination = notificationService.list(user.getId(), page, size);
+        model.addAttribute("section", "replies");
+        model.addAttribute("sectionName", "最新回复");
+        model.addAttribute("pagination", pagination);
+        return "profile";
     }
 }
