@@ -69,7 +69,6 @@ public class QuestionService {
     }
 
     /**
-     *
      * @param id
      * @param page
      * @param size
@@ -150,5 +149,18 @@ public class QuestionService {
         record.setId(id);
         record.setViewCount(1);
         questionExtMapper.incView(record);
+    }
+
+    /**
+     * 删除问题
+     *
+     * @param id   问题id
+     * @param user 当前seesion中的用户信息
+     */
+    public void delete(Long id, User user) {
+        Question question = questionMapper.selectByPrimaryKey(id);
+        if (question != null && user.getId().equals(question.getCreator())) {
+            questionMapper.deleteByPrimaryKey(id);
+        }
     }
 }
