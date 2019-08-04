@@ -35,4 +35,22 @@
             </if>
         </where>
     </select>
+    <select id="countBySearch" parameterType="life.leeray.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
+        select count(*) from question
+        <where>
+            <if test="search  != null">
+                and title regexp #{search}
+            </if>
+        </where>
+    </select>
+    <select id="selectBySearch" parameterType="life.leeray.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
+        select * from question
+        <where>
+            <if test="search  != null">
+                and title regexp #{search}
+            </if>
+        </where>
+        order by gmt_modified desc
+        limit #{page},#{size}
+    </select>
 </mapper>

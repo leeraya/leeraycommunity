@@ -1,5 +1,6 @@
 package life.leeray.community.mapper;
 
+import life.leeray.community.dto.QuestionQueryDTO;
 import life.leeray.community.model.Question;
 
 import java.util.List;
@@ -15,4 +16,8 @@ public interface QuestionExtMapper {
     int incComment(Question record);
 
     List<Question> selectRelated(Question question);
+
+    Integer countBySearch(QuestionQueryDTO questionQueryDTO);
+
+    List<Question> selectBySearch(QuestionQueryDTO questionQueryDTO);
 }
