@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author leeray
  * @version 1.0
  * @date 2019/8/3 0003 10:28
+ * 上传图片控制器
  */
 @Controller
 public class FileController {
@@ -22,11 +23,17 @@ public class FileController {
     @Autowired
     private UCloudProvider uCloudProvider;
 
+    /**
+     * @param request
+     * @return 返回一个FileDTO对象，自动转为json。对象属性根据ufile的api设定。
+     */
     @RequestMapping(value = "/file/upload")
     @ResponseBody
     public FileDTO upload(HttpServletRequest request) {
         FileDTO fileDTO = new FileDTO();
+        //转为复杂类型request,包含图片内容
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        //根据前端给图片的name属性拿到图片file
         MultipartFile file = multipartRequest.getFile("editormd-image-file");
         try {
             String imgUrl = uCloudProvider.upload(file.getInputStream(), file.getContentType(), file.getOriginalFilename());
