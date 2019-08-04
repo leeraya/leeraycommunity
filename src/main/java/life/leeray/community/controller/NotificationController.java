@@ -22,6 +22,12 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
+    /**
+     * @param id      通知id
+     * @param model
+     * @param request
+     * @return
+     */
     @GetMapping(value = "/notification/{id}")
     public String profile(@PathVariable(name = "id") Long id,
                           Model model,
