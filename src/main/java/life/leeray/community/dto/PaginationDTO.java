@@ -3,6 +3,7 @@ package life.leeray.community.dto;
 import life.leeray.community.dto.QuestionDTO;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @date 2019/7/25 0025 15:48
  */
 @Data
-public class PaginationDTO<T> {
+public class PaginationDTO<T> implements Serializable {
     private List<T> data;
     private boolean showPrevious;
     private boolean showFirst;

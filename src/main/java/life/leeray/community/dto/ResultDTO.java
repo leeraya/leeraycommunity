@@ -4,13 +4,15 @@ import life.leeray.community.exception.CustomizeErrorCode;
 import life.leeray.community.exception.CustomizeException;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author leeray
  * @version 1.0
  * @date 2019/7/28 0028 15:19
  */
 @Data
-public class ResultDTO<T> {
+public class ResultDTO<T> implements Serializable {
     private Integer code;
     private String message;
     private T data;

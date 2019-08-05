@@ -37,6 +37,14 @@ public class PublishController {
         return "publish";
     }
 
+    /**
+     * post方式发布问题
+     *
+     * @param request
+     * @param model
+     * @param id
+     * @return
+     */
     @PostMapping("/publish")
     public String doPublish(HttpServletRequest request,
                             Model model,
@@ -62,8 +70,8 @@ public class PublishController {
             return "publish";
         }
         String invalidTag = TagCache.filterInvalid(tag);
-        if (StringUtils.isNotBlank(invalidTag)){
-            model.addAttribute("error", "包含不支持的标签："+invalidTag);
+        if (StringUtils.isNotBlank(invalidTag)) {
+            model.addAttribute("error", "包含不支持的标签：" + invalidTag);
             return "publish";
         }
 
@@ -82,11 +90,22 @@ public class PublishController {
         return "redirect:/";
     }
 
+    /**
+     * 用于跳转到修改问题页面
+     *
+     * @param id
+     * @param model
+     * @param request
+     * @return
+     */
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable("id") Long id,
                        Model model,
                        HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
         if (id != null) {
             Question dbQuestion = questionMapper.selectByPrimaryKey(id);
             if (user.getId() == dbQuestion.getCreator()) {

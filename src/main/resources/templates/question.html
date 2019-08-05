@@ -117,11 +117,11 @@
                         <div class="media-left">
                             <a href="#">
                                 <img class="media-object img-rounded"
-                                     th:src="${user.avatarUrl}">
+                                     th:src="${session.user == null ? '/images/default-avatar.png':session.user.avatarUrl}">
                             </a>
                         </div>
                         <div class="media-body">
-                            <h5 th:text="${user.name}"></h5>
+                            <h5 th:text="${session.user == null?'游客':session.user.name}"></h5>
                         </div>
                     </div>
                     <input type="hidden" id="question_id" th:value="${question.question.id}">

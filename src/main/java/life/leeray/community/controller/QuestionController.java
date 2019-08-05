@@ -33,15 +33,7 @@ public class QuestionController {
     private CommentService commentService;
 
     @GetMapping("/question/{id}")
-    public String question(@PathVariable("id") Long id, Model model,
-                           HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("游客");
-            user.setAvatarUrl("/images/default-avatar.png");
-        }
-
+    public String question(@PathVariable("id") Long id, Model model) {
         questionService.incView(id);//增加阅读数
         QuestionDTO question = questionService.getById(id);
         List<CommentDTO> comments = commentService.listByTargetId(id, ContentTypeEnum.QUESTION);
@@ -50,7 +42,6 @@ public class QuestionController {
         model.addAttribute("question", question);
         model.addAttribute("comments", comments);
         model.addAttribute("relatedQuestions", relatedQuestions);
-        model.addAttribute("user", user);
 
         return "question";
     }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import life.leeray.community.dto.ResultDTO;
 import life.leeray.community.exception.CustomizeErrorCode;
 import life.leeray.community.exception.CustomizeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,7 @@ import java.io.PrintWriter;
  * @date 2019/7/28 0028 9:07
  */
 @ControllerAdvice
+@Slf4j
 public class CustomizeExceptionHandler {
     @ExceptionHandler(Exception.class)
     ModelAndView handle(Model model,
@@ -33,6 +35,7 @@ public class CustomizeExceptionHandler {
             if (ex instanceof CustomizeException) {
                 resultDTO = ResultDTO.errorOf((CustomizeException) ex);
             } else {
+                log.error("handle error", ex);
                 resultDTO = ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);
             }
             try {
@@ -51,6 +54,7 @@ public class CustomizeExceptionHandler {
             if (ex instanceof CustomizeException) {
                 model.addAttribute("message", ex.getMessage());
             } else {
+                log.error("handle error", ex);
                 model.addAttribute("message", CustomizeErrorCode.SYS_ERROR.getMessage());
             }
             return new ModelAndView("error");

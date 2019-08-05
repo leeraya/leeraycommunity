@@ -2,6 +2,9 @@ package life.leeray.community.controller;
 
 import life.leeray.community.dto.FileDTO;
 import life.leeray.community.provider.UCloudProvider;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * 上传图片控制器
  */
 @Controller
+@Slf4j
 public class FileController {
 
     @Autowired
@@ -39,9 +43,13 @@ public class FileController {
             String imgUrl = uCloudProvider.upload(file.getInputStream(), file.getContentType(), file.getOriginalFilename());
             fileDTO.setSuccess(1);
             fileDTO.setUrl(imgUrl);
+            return fileDTO;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("upload error", e);
+            fileDTO = new FileDTO();
+            fileDTO.setSuccess(0);
+            fileDTO.setMessage("上传失败");
+            return fileDTO;
         }
-        return fileDTO;
     }
 }

@@ -3,13 +3,15 @@ package life.leeray.community.dto;
 import life.leeray.community.model.User;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author leeray
  * @version 1.0
  * @date 2019/8/1 0001 16:42
  */
 @Data
-public class NotificationDTO {
+public class NotificationDTO implements Serializable {
     private Long id;
     private Long gmtCreate;
     private Integer status;
