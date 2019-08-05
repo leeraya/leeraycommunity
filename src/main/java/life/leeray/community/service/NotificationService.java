@@ -11,6 +11,7 @@ import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.Notification;
 import life.leeray.community.model.NotificationExample;
 import life.leeray.community.model.User;
+import life.leeray.community.utils.PageValidator;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +34,11 @@ public class NotificationService {
     @Autowired
     private NotificationMapper notificationMapper;
 
-    public static Integer validator(Integer page, Integer size, Integer count) {
-        //边界验证，容错处理
-        Integer totalPage = count % size == 0 ? count / size : count / size + 1;
-        page = page < 1 ? 1 : page;
-        page = page > totalPage ? totalPage : page;
-        return page;
-    }
-
     public PaginationDTO list(Long id, Integer page, Integer size) {
         NotificationExample notificationExample = new NotificationExample();
         notificationExample.createCriteria().andReceiverEqualTo(id);
         Integer count = notificationMapper.countByExample(notificationExample);
-        page = validator(page, size, count);
+        page = PageValidator.validator(page, size, count);
         //计算用于limit m,n所需的m值
         Integer offset = size * (page - 1);
         NotificationExample example = new NotificationExample();
