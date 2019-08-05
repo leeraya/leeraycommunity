@@ -10,10 +10,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author leeray
@@ -28,6 +31,9 @@ public class SessionIntercepter implements HandlerInterceptor {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -36,9 +42,19 @@ public class SessionIntercepter implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
-                    UserExample userExample = new UserExample();
-                    userExample.createCriteria().andTokenEqualTo(token);
-                    List<User> users = userMapper.selectByExample(userExample);
+                    List<User> users = new ArrayList<>();
+                    User user;
+                    if (redisTemplate.hasKey("user" + token)) {
+                        user = (User) redisTemplate.opsForValue().get("user" + token);
+                        users.add(user);
+                    } else {
+                        UserExample userExample = new UserExample();
+                        userExample.createCriteria().andTokenEqualTo(token);
+                        users = userMapper.selectByExample(userExample);
+                        if (users.size() != 0) {
+                            redisTemplate.opsForValue().set("user" + token, users.get(0), 600, TimeUnit.SECONDS);
+                        }
+                    }
                     if (users.size() != 0) {
                         request.getSession().setAttribute("user", users.get(0));
                         int unreadCount = notificationService.unreadCount(users.get(0).getId());

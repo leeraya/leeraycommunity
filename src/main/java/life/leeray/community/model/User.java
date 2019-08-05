@@ -1,6 +1,8 @@
 package life.leeray.community.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private Long id;
 
     private String name;

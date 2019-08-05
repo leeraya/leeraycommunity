@@ -13,11 +13,11 @@ import life.leeray.community.model.QuestionExample;
 import life.leeray.community.model.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +39,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionExtMapper questionExtMapper;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     public static Integer validator(Integer page, Integer size, Integer count) {
         //边界验证，容错处理

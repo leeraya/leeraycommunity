@@ -1,6 +1,8 @@
 package life.leeray.community.model;
 
-public class Notification {
+import java.io.Serializable;
+
+public class Notification implements Serializable {
     private Long id;
 
     private Long notifier;
