@@ -43,7 +43,7 @@ public class SessionIntercepter implements HandlerInterceptor {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
                     List<User> users = new ArrayList<>();
-                    User user;
+                    User user;//要存入redis的数据
                     if (redisTemplate.hasKey("user" + token)) {
                         user = (User) redisTemplate.opsForValue().get("user" + token);
                         users.add(user);

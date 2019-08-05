@@ -11,13 +11,13 @@ import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.Question;
 import life.leeray.community.model.QuestionExample;
 import life.leeray.community.model.User;
+import life.leeray.community.utils.PageValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,16 +40,16 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    @Resource
+    @Autowired
     private RedisTemplate redisTemplate;
 
-    public static Integer validator(Integer page, Integer size, Integer count) {
+    /*public static Integer validator(Integer page, Integer size, Integer count) {
         //边界验证，容错处理
         Integer totalPage = count % size == 0 ? count / size : count / size + 1;
         page = page < 1 ? 1 : page;
         page = page > totalPage ? totalPage : page;
         return page;
-    }
+    }*/
 
     public PaginationDTO list(String search, Integer page, Integer size) {
         if (StringUtils.isNotBlank(search)) {
@@ -66,7 +66,7 @@ public class QuestionService {
         List<Question> questions = new ArrayList<>();
         //有符合条件的问题
         if (count != 0) {
-            page = validator(page, size, count);
+            page = PageValidator.validator(page, size, count);
             //计算用于limit m,n所需的m值
             Integer offset = size * (page - 1);
             questionQueryDTO.setPage(offset);
@@ -100,7 +100,7 @@ public class QuestionService {
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(id);
         Integer count = questionMapper.countByExample(questionExample);
-        page = validator(page, size, count);
+        page = PageValidator.validator(page, size, count);
         //计算用于limit m,n所需的m值
         Integer offset = size * (page - 1);
         QuestionExample example = new QuestionExample();

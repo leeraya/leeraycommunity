@@ -38,7 +38,7 @@
     <select id="countBySearch" parameterType="life.leeray.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
         select count(*) from question
         <where>
-            <if test="search  != null">
+            <if test="search != null and search != ''">
                 and title regexp #{search}
             </if>
         </where>
@@ -46,7 +46,7 @@
     <select id="selectBySearch" parameterType="life.leeray.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
         select * from question
         <where>
-            <if test="search  != null">
+            <if test="search != null and search != ''">
                 and title regexp #{search}
             </if>
         </where>
