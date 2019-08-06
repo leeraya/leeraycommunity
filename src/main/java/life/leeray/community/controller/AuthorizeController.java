@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 
@@ -72,12 +73,13 @@ public class AuthorizeController {
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        User user = (User) request.getSession().getAttribute("user");
+        HttpSession session = request.getSession();//从request中获取session
+        User user = (User) session.getAttribute("user");
         String token = user.getToken();
         if (redisTemplate.hasKey("user" + token)) {
             redisTemplate.delete("user" + token);
         }
-        request.getSession().removeAttribute("user");
+        session.removeAttribute("user");
         Cookie cookie = new Cookie("token", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");

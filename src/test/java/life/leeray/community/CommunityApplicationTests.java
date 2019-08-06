@@ -54,4 +54,14 @@ public class CommunityApplicationTests {
         }
     }
 
+    @Cacheable(cacheNames = "user",key = "#id")
+    public  User getUser(Long id){
+        return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Test
+    public void Test11(){
+        System.out.println(this.getUser(24L));
+    }
+
 }
