@@ -8,6 +8,7 @@ import life.leeray.community.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,9 @@ public class AuthorizeController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
@@ -68,6 +72,11 @@ public class AuthorizeController {
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
+        User user = (User) request.getSession().getAttribute("user");
+        String token = user.getToken();
+        if (redisTemplate.hasKey("user" + token)) {
+            redisTemplate.delete("user" + token);
+        }
         request.getSession().removeAttribute("user");
         Cookie cookie = new Cookie("token", null);
         cookie.setMaxAge(0);
