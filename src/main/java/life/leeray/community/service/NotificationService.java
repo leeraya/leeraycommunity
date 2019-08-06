@@ -15,7 +15,7 @@ import life.leeray.community.utils.PageValidator;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,6 +34,9 @@ public class NotificationService {
 
     @Autowired
     private NotificationMapper notificationMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public PaginationDTO list(Long id, Integer page, Integer size) {
         NotificationExample notificationExample = new NotificationExample();
@@ -62,7 +65,7 @@ public class NotificationService {
             return paginationDTO;
         }
         List<NotificationDTO> notificationDTOS = new ArrayList();
-        
+
         notifications.stream().forEach(notification -> {
             NotificationDTO notificationDTO = new NotificationDTO();
             BeanUtils.copyProperties(notification, notificationDTO);
@@ -75,9 +78,9 @@ public class NotificationService {
     }
 
     /**
-     * 获取为读的通知数量
+     * 获取未读的通知数量
      *
-     * @param id
+     * @param id 消息接受者的id
      * @return
      */
     public int unreadCount(Long id) {

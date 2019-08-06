@@ -24,13 +24,11 @@ public class NotificationController {
 
     /**
      * @param id      通知id
-     * @param model
      * @param request
      * @return
      */
     @GetMapping(value = "/notification/{id}")
     public String profile(@PathVariable(name = "id") Long id,
-                          Model model,
                           HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
