@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/community.css">
+</head>
+<body class="login-bg">
+<div class="container-fluid ">
+    <div id="wrapper" class="wrapper">
+        <div class="aw-login-box">
+            <div class="mod-body clearfix">
+                <div class="content pull-left">
+                    <h2 class="logo"><a href="/"></a></h2>
+                    <h4 class="login-title">Leeray 中文社区</h4>
+                    <form id="login_form" method="post" onsubmit="return false"
+                          action="https://elasticsearch.cn/account/ajax/login_process/">
+                        <input type="hidden" name="return_url" value=""/>
+                        <ul class="login-list">
+                            <li>
+                                <input type="text" id="aw-login-user-name" class="form-control" placeholder="邮箱 / 用户名"
+                                       name="user_name"/>
+                            </li>
+                            <li>
+                                <input type="password" id="aw-login-user-password" class="form-control" placeholder="密码"
+                                       name="password"/>
+                            </li>
+                            <li class="alert alert-danger hide error_message">
+                                <i class="icon icon-delete"></i> <em></em>
+                            </li>
+                            <li class="last">
+                                <a href="javascript:;"
+                                   onclick="AWS.ajax_post($('#login_form'), AWS.ajax_processer, 'error_message');"
+                                   id="login_submit" class="pull-right btn btn-large btn-primary">登录</a>
+                                <label>
+                                    <input type="checkbox" value="1" name="net_auto_login"/>
+                                    记住我 </label>
+                                <a href="https://elasticsearch.cn/account/find_password/">&nbsp;&nbsp;忘记密码</a>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+                <div class="side-bar pull-left">
+                    <h3>第三方账号登录</h3>
+                    <a th:href="@{https://github.com/login/oauth/authorize?client_id=Iv1.2b98e8480c3c7cf5&redirect_uri=http://localhost:8080/callback&scope=user&state=1}" class="btn btn-block btn-github"> <i
+                            class="icon icon-github"></i> Github 登录</a>
+                </div>
+            </div>
+            <div class="mod-footer">
+                <span>还没有账号?</span>&nbsp;&nbsp;
+                <a href="https://elasticsearch.cn/account/register/">立即注册</a>&nbsp;&nbsp;•&nbsp;&nbsp;
+                <a href="https://elasticsearch.cn/">游客访问</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="footer :: foot"></div>
+</body>
+</html>
