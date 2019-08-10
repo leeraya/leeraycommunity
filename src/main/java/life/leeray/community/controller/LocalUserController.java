@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2019/8/9 0009 16:25
  */
 @Controller
-public class LoginController {
+public class LocalUserController {
 
     @RequestMapping("/login")
     public String login() {
