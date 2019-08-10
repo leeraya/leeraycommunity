@@ -50,4 +50,11 @@ public class ResultDTO<T> implements Serializable {
         return resultDTO;
     }
 
+    public static ResultDTO captchaError() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3001);
+        resultDTO.setMessage("验证码错误");
+        return resultDTO;
+    }
+
 }

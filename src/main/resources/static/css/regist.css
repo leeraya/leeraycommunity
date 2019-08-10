@@ -1,0 +1,42 @@
+body{
+    background:url("/images/login_bg.jpg") top center no-repeat;
+    background-size:cover;
+}
+
+#register-form{
+    margin-top: 50px;
+}
+
+#title {
+    position: fixed;
+    top: 50px;
+    left: 100px;
+    font-size: 40px;
+}
+
+#title-tail {
+    position: fixed;
+    top: 130px;
+    left: 210px;
+    font-size: 20px;
+}
+
+#register-div{
+    margin-top: 50px;
+}
+
+h2{
+    font-size: 30px;
+    font-family: source_code_pro,"PingFangSC-Regular",
+    "Heiti SC","Microsoft Yahei",monospace;
+}
+
+a{
+    color: #428bca;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
