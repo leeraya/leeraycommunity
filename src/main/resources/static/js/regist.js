@@ -1,9 +1,6 @@
 $(document).ready(function () {
     $('#loginBtn').click(function () {
         var params = $("input").serialize();
-        /*var username = $.trim($('#username').val());
-        var password = $.trim($('#password').val());*/
-        // console.log(username);
         $.ajax({
             type: 'post',
             url: '/doRegist',
