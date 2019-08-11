@@ -5,6 +5,8 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="token" property="token" jdbcType="CHAR" />
     <result column="gmt_create" property="gmtCreate" jdbcType="BIGINT" />
     <result column="gmt_modified" property="gmtModified" jdbcType="BIGINT" />
@@ -69,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, name, account_id, token, gmt_create, gmt_modified, avatar_url
+    id, name, account_id, password, email, token, gmt_create, gmt_modified, avatar_url
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="life.leeray.community.model.UserExample" >
     select
@@ -103,11 +105,13 @@
   </delete>
   <insert id="insert" parameterType="life.leeray.community.model.User" >
     insert into user (id, name, account_id, 
-      token, gmt_create, gmt_modified, 
-      avatar_url)
+      password, email, token, 
+      gmt_create, gmt_modified, avatar_url
+      )
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, 
-      #{token,jdbcType=CHAR}, #{gmtCreate,jdbcType=BIGINT}, #{gmtModified,jdbcType=BIGINT}, 
-      #{avatarUrl,jdbcType=VARCHAR})
+      #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{token,jdbcType=CHAR}, 
+      #{gmtCreate,jdbcType=BIGINT}, #{gmtModified,jdbcType=BIGINT}, #{avatarUrl,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="life.leeray.community.model.User" >
     insert into user
@@ -120,6 +124,12 @@
       </if>
       <if test="accountId != null" >
         account_id,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="email != null" >
+        email,
       </if>
       <if test="token != null" >
         token,
@@ -143,6 +153,12 @@
       </if>
       <if test="accountId != null" >
         #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
       </if>
       <if test="token != null" >
         #{token,jdbcType=CHAR},
@@ -176,6 +192,12 @@
       <if test="record.accountId != null" >
         account_id = #{record.accountId,jdbcType=VARCHAR},
       </if>
+      <if test="record.password != null" >
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
       <if test="record.token != null" >
         token = #{record.token,jdbcType=CHAR},
       </if>
@@ -198,6 +220,8 @@
     set id = #{record.id,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
       account_id = #{record.accountId,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
       token = #{record.token,jdbcType=CHAR},
       gmt_create = #{record.gmtCreate,jdbcType=BIGINT},
       gmt_modified = #{record.gmtModified,jdbcType=BIGINT},
@@ -214,6 +238,12 @@
       </if>
       <if test="accountId != null" >
         account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
       </if>
       <if test="token != null" >
         token = #{token,jdbcType=CHAR},
@@ -234,6 +264,8 @@
     update user
     set name = #{name,jdbcType=VARCHAR},
       account_id = #{accountId,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
       token = #{token,jdbcType=CHAR},
       gmt_create = #{gmtCreate,jdbcType=BIGINT},
       gmt_modified = #{gmtModified,jdbcType=BIGINT},

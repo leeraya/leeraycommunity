@@ -57,4 +57,31 @@ public class ResultDTO<T> implements Serializable {
         return resultDTO;
     }
 
+    public static ResultDTO confirmError() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3002);
+        resultDTO.setMessage("两次密码不一致");
+        return resultDTO;
+    }
+
+    public static ResultDTO duplicateName() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3003);
+        resultDTO.setMessage("用户名已经被注册！");
+        return resultDTO;
+    }
+
+    public static ResultDTO duplicateEmail() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3004);
+        resultDTO.setMessage("邮箱已经被注册！");
+        return resultDTO;
+    }
+
+    public static ResultDTO pwdLengthError() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3005);
+        resultDTO.setMessage("请保持密码长度在6-30之间！");
+        return resultDTO;
+    }
 }

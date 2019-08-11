@@ -9,14 +9,15 @@ $(document).ready(function () {
             timeout: 1000,
             success: function (response) {
                 if (response.code == 200) {
-                    alert('注册成功，现在返回登录界面...');
-                    location.href = "login";
-                } else if (response.code == 3001) {
+                    alert('注册成功，现在返回首页...');
+                    location.href = "/";
+                } else {
                     alert(response.message);
+                    refresh_captcha();
                 }
             },
             error: function () {
-                alert('error');
+                alert('出问题啦！');
             }
         });
     });

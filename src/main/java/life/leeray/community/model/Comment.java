@@ -1,8 +1,6 @@
 package life.leeray.community.model;
 
-import java.io.Serializable;
-
-public class Comment implements Serializable {
+public class Comment {
     private Long id;
 
     private Long parentId;

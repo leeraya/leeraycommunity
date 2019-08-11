@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/regist.css"/>
     <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/validator.js"></script>
     <script src="/js/regist.js"></script>
 </head>
 
@@ -34,14 +35,14 @@
             <div class="form-group">
                 <label for="password">密码</label>
                 <input type="password" class="form-control input-lg" id="password" name="password"
-                       data-error="请填写密码" placeholder="密码" data-minlength="6" data-minlength-error="密码不得少于6位" required>
+                       data-error="请填写密码" placeholder="密码" required>
                 <div class="help-block with-errors"></div>
             </div>
 
             <div class="form-group">
                 <label for="confirm_password">确认密码</label>
                 <input type="password" class="form-control input-lg" id="confirm_password" name="confirm_password"
-                       placeholder="确认密码" data-match="#password" data-match-error="两个密码不一致" data-error="请填写确认密码" required>
+                       placeholder="确认密码" data-error="请填写确认密码" required>
                 <div class="help-block with-errors"></div>
             </div>
 
@@ -54,10 +55,10 @@
 
             <div class="form-group" id="captcha-area">
                 <label for="captcha">验证码</label>&nbsp;&nbsp;
-                <img src="captcha" id="captcha-img" onclick="refresh_captcha()">
+                <img src="captcha" id="captcha-img">
                 <small><p></p></small>
                 <input type="text" class="form-control input-lg" id="captcha" name="captcha"
-                       placeholder="验证码" maxlength="4" data-error="请填写验证码" required>
+                       placeholder="验证码" data-error="请填写验证码" required>
                 <div class="help-block with-errors"></div>
             </div>
 

@@ -1,9 +1,9 @@
 package life.leeray.community.controller;
 
 import life.leeray.community.dto.ResultDTO;
-import life.leeray.community.mapper.LocalUserMapper;
-import life.leeray.community.model.LocalUser;
-import life.leeray.community.model.LocalUserExample;
+import life.leeray.community.mapper.UserMapper;
+import life.leeray.community.model.User;
+import life.leeray.community.model.UserExample;
 import life.leeray.community.utils.CodeVerify;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author leeray
@@ -30,7 +32,7 @@ import java.util.List;
 public class LocalUserController {
 
     @Autowired
-    private LocalUserMapper localUserMapper;
+    private UserMapper userMapper;
 
     @RequestMapping("/login")
     public String login() {
@@ -54,23 +56,39 @@ public class LocalUserController {
         String email = request.getParameter("email");
         String captcha = request.getParameter("captcha");
 
-        model.addAttribute("username", username);
-        model.addAttribute("password", password);
-        model.addAttribute("confirm_password", confirm_password);
-        model.addAttribute("email", email);
-
         //获取session中生成的验证码
         String imageCode = (String) request.getSession().getAttribute("imageCode");
-
-
         if (!imageCode.toUpperCase().equals(captcha.toUpperCase())) {
             return ResultDTO.captchaError();
+        } else if (!password.equals(confirm_password)) {
+            return ResultDTO.confirmError();
+        } else if (password.length() < 6 || password.length() > 30) {
+            return ResultDTO.pwdLengthError();
         }
-
-        LocalUserExample example1 = new LocalUserExample();
+        UserExample example1 = new UserExample();
         example1.createCriteria().andNameEqualTo(username);
-        localUserMapper.selectByExample(example1);
-
+        List<User> users1 = userMapper.selectByExample(example1);
+        if (users1 != null && users1.size() != 0) {
+            return ResultDTO.duplicateName();
+        }
+        UserExample example2 = new UserExample();
+        example2.createCriteria().andEmailEqualTo(email);
+        List<User> users2 = userMapper.selectByExample(example2);
+        if (users2 != null && users2.size() != 0) {
+            return ResultDTO.duplicateEmail();
+        }
+        //如果都经过了检查，那么就将用户写入数据库
+        User lcUser = new User();
+        lcUser.setAvatarUrl("/images/default-avatar.png");//默认头像,后面可以改的
+        lcUser.setGmtCreate(System.currentTimeMillis());
+        lcUser.setGmtModified(lcUser.getGmtCreate());
+        lcUser.setName(username);
+        lcUser.setPassword(password);
+        lcUser.setEmail(email);
+        String token = UUID.randomUUID().toString();
+        response.addCookie(new Cookie("token", token));
+        lcUser.setToken(token);
+        userMapper.insertSelective(lcUser);
         return ResultDTO.okOff();
     }
 
@@ -83,7 +101,6 @@ public class LocalUserController {
         Object[] objs = CodeVerify.createImage();
         //将验证码存入Session
         session.setAttribute("imageCode", objs[0]);
-
         //将图片输出给浏览器
         BufferedImage image = (BufferedImage) objs[1];
         response.setContentType("image/png");

@@ -1,8 +1,6 @@
 package life.leeray.community.model;
 
-import java.io.Serializable;
-
-public class Question implements Serializable {
+public class Question {
     private Long id;
 
     private String title;

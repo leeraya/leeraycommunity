@@ -1,8 +1,6 @@
 package life.leeray.community.mapper;
 
 import java.util.List;
-
-import life.leeray.community.dto.QuestionQueryDTO;
 import life.leeray.community.model.Question;
 import life.leeray.community.model.QuestionExample;
 import org.apache.ibatis.annotations.Param;
