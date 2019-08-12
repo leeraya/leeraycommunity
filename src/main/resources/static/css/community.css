@@ -136,3 +136,17 @@ body {
     padding: 10px 25%;
     color: #666;;
 }
+
+.info-list {
+    font-size: 18px;
+    list-style: none;
+}
+
+.info-list img {
+    width: 100px;
+    height: 100px;
+}
+
+.info-list li{
+    margin-bottom: 10px;
+}

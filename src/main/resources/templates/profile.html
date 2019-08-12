@@ -46,14 +46,17 @@
                     <!--问题操作-->
                     <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
                         <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 操作
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 <li><a th:href="@{'/question/'+${question.question.id}}">查看</a></li>
                                 <li><a th:href="@{'/publish/'+${question.question.id}}">编辑</a></li>
-                                <li><a th:href="@{'/question/delete'+'?id='+${question.question.id}+'&page='+${pagination.page} +'&size=6'}">删除</a></li>
+                                <li>
+                                    <a th:href="@{'/question/delete'+'?id='+${question.question.id}+'&page='+${pagination.page} +'&size=6'}">删除</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -78,8 +81,33 @@
                     </div>
                 </div>
             </div>
+            <!--个人资料-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'info'}">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded"
+                                 th:src="${session.user.avatarUrl}" alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <ul class="info-list">
+                            <li>
+                                用户名：[[${session.user.name}]]
+                            </li>
+                            <li>
+                                邮箱：<span th:text="${session.user.email}"></span>
+                            </li>
+                            <li>
+                                最后操作时间：<span th:text="${#dates.format(session.user.gmtModified,'yyyy-MM-dd HH:mm')}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <!--分页-->
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                 th:if="${section == 'questions' || section == 'replies'}">
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
                         <li th:if="${pagination.showFirst}">
@@ -118,10 +146,14 @@
                 <a href="/profile/replies" class="list-group-item" th:classappend="${section == 'replies'}?'active':''">
                     最新回复<span class="badge" th:text="${session.unreadCount}">14</span>
                 </a>
+                <a href="/profile/info" class="list-group-item"
+                   th:classappend="${section == 'info'}?'active':''">
+                    个人资料
+                </a>
             </div>
         </div>
     </div>
 </div>
-<div th:replace="footer :: foot" ></div>
+<div th:replace="footer :: foot"></div>
 </body>
 </html>

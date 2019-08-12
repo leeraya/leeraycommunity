@@ -49,6 +49,9 @@ public class ProfileController {
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
             model.addAttribute("pagination", pagination);
+        } else if ("info".equals(action)) {
+            model.addAttribute("section", "info");
+            model.addAttribute("sectionName", "个人资料");
         }
         return "profile";
     }
