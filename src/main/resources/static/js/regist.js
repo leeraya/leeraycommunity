@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#loginBtn').click(function () {
+    $('#registBtn').click(function () {
         var params = $("input").serialize();
         $.ajax({
             type: 'post',

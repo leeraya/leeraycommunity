@@ -84,4 +84,11 @@ public class ResultDTO<T> implements Serializable {
         resultDTO.setMessage("请保持密码长度在6-30之间！");
         return resultDTO;
     }
+
+    public static ResultDTO UnknowUser() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3006);
+        resultDTO.setMessage("用户名或密码错误！");
+        return resultDTO;
+    }
 }

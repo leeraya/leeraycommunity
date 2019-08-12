@@ -45,11 +45,11 @@ public class LocalUserController {
     }
 
 
+    //用户注册
     @RequestMapping(value = "/doRegist", method = RequestMethod.POST)
     @ResponseBody
     public Object doRegist(HttpServletRequest request,
-                           HttpServletResponse response,
-                           Model model) {
+                           HttpServletResponse response) {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String confirm_password = request.getParameter("confirm_password");
@@ -90,6 +90,25 @@ public class LocalUserController {
         lcUser.setToken(token);
         userMapper.insertSelective(lcUser);
         return ResultDTO.okOff();
+    }
+
+    @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
+    @ResponseBody
+    public Object doLogin(HttpServletRequest request, HttpServletResponse response) {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        UserExample example = new UserExample();
+        example.createCriteria().andNameEqualTo(username)
+                .andPasswordEqualTo(password);
+        List<User> users = userMapper.selectByExample(example);
+        if (users == null || users.size() == 0) {
+            return ResultDTO.UnknowUser();
+        } else {
+            User user = users.get(0);
+            response.addCookie(new Cookie("token", user.getToken()));
+            return ResultDTO.okOff();
+        }
     }
 
     //自动生成验证码方法
