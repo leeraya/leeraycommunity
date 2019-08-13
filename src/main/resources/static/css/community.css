@@ -142,11 +142,14 @@ body {
     list-style: none;
 }
 
-.info-list img {
-    width: 100px;
-    height: 100px;
-}
-
 .info-list li{
     margin-bottom: 10px;
+}
+
+.btn-uploadImg{
+    margin-top: 6px;
+}
+
+.input-img{
+    margin-top: 5px;
 }

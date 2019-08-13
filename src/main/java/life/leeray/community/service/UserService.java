@@ -4,6 +4,7 @@ import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.User;
 import life.leeray.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -17,6 +18,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserMapper userMapper;
+
+    @Value("${customize-img-prefix}")
+    private String imgPrefix;
 
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();
@@ -35,7 +39,12 @@ public class UserService {
             //更新
             User updateUser = new User();
             updateUser.setGmtModified(System.currentTimeMillis());
-            updateUser.setAvatarUrl(user.getAvatarUrl());
+            //github用户头像的更新规则：默认使用github头像，如果用户在资料中心更换头像，
+            // 则用户头像不再随github的头像更换而改变
+            //如果头像是在本站内更换的，那么不会更新github头像的,反之，如果没有在本站更换过，那么就随github的变
+            if (dbUser.getAvatarUrl().indexOf(imgPrefix) == -1){
+                updateUser.setAvatarUrl(user.getAvatarUrl());
+            }
             updateUser.setToken(user.getToken());
             updateUser.setName(user.getName());
             UserExample example = new UserExample();

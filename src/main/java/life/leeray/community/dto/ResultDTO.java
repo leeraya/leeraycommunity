@@ -91,4 +91,11 @@ public class ResultDTO<T> implements Serializable {
         resultDTO.setMessage("用户名或密码错误！");
         return resultDTO;
     }
+
+    public static ResultDTO test() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(4000);
+        resultDTO.setMessage("测试测试！");
+        return resultDTO;
+    }
 }

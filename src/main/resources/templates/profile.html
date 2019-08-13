@@ -2,12 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
     <title>个人中心</title>
-    <script th:src="@{/js/jquery-3.4.1.min.js}" src="js/jquery-3.4.1.min.js"></script>
-    <script th:src="@{/js/bootstrap.min.js}" src="js/bootstrap.min.js" type="application/javascript"></script>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}" href="css/bootstrap-theme.min.css">
     <link rel="stylesheet" th:href="@{/css/community.css}" href="css/community.css">
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}" src="js/jquery-3.4.1.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}" src="js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/info.js"></script>
 </head>
 <body>
 <div th:replace="navigation :: topbar"></div>
@@ -85,10 +88,17 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'info'}">
                 <div class="media">
                     <div class="media-left">
+                        用户头像:
                         <a href="#">
                             <img class="media-object img-rounded"
-                                 th:src="${session.user.avatarUrl}" alt="...">
+                                 th:src="${session.user.avatarUrl}">
                         </a>
+                        <form id="imgForm" enctype="multipart/form-data">
+                            <input type="file" id="uploadImg" name="uploadImg" multiple="multiple" class="input-img" accept="image/*">
+                            <button type="button" class="hidden btn-uploadImg" id="btn-uploadImg" name="btn-uploadImg">
+                                确认更换
+                            </button>
+                        </form>
                     </div>
                     <div class="media-body">
                         <ul class="info-list">
@@ -99,7 +109,8 @@
                                 邮箱：<span th:text="${session.user.email}"></span>
                             </li>
                             <li>
-                                最后操作时间：<span th:text="${#dates.format(session.user.gmtModified,'yyyy-MM-dd HH:mm')}"></span>
+                                最后操作时间：<span
+                                    th:text="${#dates.format(session.user.gmtModified,'yyyy-MM-dd HH:mm')}"></span>
                             </li>
                         </ul>
                     </div>

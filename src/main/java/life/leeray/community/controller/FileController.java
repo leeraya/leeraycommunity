@@ -1,18 +1,27 @@
 package life.leeray.community.controller;
 
 import life.leeray.community.dto.FileDTO;
+import life.leeray.community.dto.ResultDTO;
+import life.leeray.community.mapper.UserMapper;
+import life.leeray.community.model.User;
 import life.leeray.community.provider.UCloudProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author leeray
@@ -26,6 +35,13 @@ public class FileController {
 
     @Autowired
     private UCloudProvider uCloudProvider;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     /**
      * @param request
@@ -52,4 +68,32 @@ public class FileController {
             return fileDTO;
         }
     }
+
+    /**
+     * 用户修改头像
+     *
+     * @param img
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/file/uploadImg", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultDTO uploadImg(@RequestParam(value = "uploadImg") MultipartFile img,
+                               HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        //上传
+        try {
+            String imgUrl = uCloudProvider.upload(img.getInputStream(), img.getContentType(), img.getOriginalFilename());
+            user.setAvatarUrl(imgUrl);
+            userMapper.updateByPrimaryKeySelective(user);
+            if (redisTemplate.hasKey("user" + user.getToken())) {
+                redisTemplate.opsForValue().set("user" + user.getToken(), user, 600, TimeUnit.SECONDS);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResultDTO.okOff();
+    }
+
 }
