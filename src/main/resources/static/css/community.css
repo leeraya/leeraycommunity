@@ -137,19 +137,14 @@ body {
     color: #666;;
 }
 
-.info-list {
-    font-size: 18px;
-    list-style: none;
-}
-
-.info-list li{
-    margin-bottom: 10px;
-}
-
 .btn-uploadImg{
     margin-top: 6px;
 }
 
 .input-img{
     margin-top: 5px;
+}
+
+.info-operate{
+    margin-top: 15px;
 }

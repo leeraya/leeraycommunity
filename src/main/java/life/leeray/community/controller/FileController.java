@@ -85,6 +85,7 @@ public class FileController {
         try {
             String imgUrl = uCloudProvider.upload(img.getInputStream(), img.getContentType(), img.getOriginalFilename());
             user.setAvatarUrl(imgUrl);
+            user.setGmtModified(System.currentTimeMillis());
             userMapper.updateByPrimaryKeySelective(user);
             if (redisTemplate.hasKey("user" + user.getToken())) {
                 redisTemplate.opsForValue().set("user" + user.getToken(), user, 600, TimeUnit.SECONDS);
@@ -92,7 +93,6 @@ public class FileController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return ResultDTO.okOff();
     }
 

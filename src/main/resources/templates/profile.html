@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8"/>
     <title>个人中心</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}" href="css/bootstrap-theme.min.css">
@@ -86,7 +86,7 @@
             </div>
             <!--个人资料-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'info'}">
-                <div class="media">
+                <div class="media col-lg-10 col-md-12 col-sm-12 col-xs-12">
                     <div class="media-left">
                         用户头像:
                         <a href="#">
@@ -94,27 +94,54 @@
                                  th:src="${session.user.avatarUrl}">
                         </a>
                         <form id="imgForm" enctype="multipart/form-data">
-                            <input type="file" id="uploadImg" name="uploadImg" multiple="multiple" class="input-img" accept="image/*">
-                            <button type="button" class="hidden btn-uploadImg" id="btn-uploadImg" name="btn-uploadImg">
+                            <input type="file" id="uploadImg" name="uploadImg" multiple="multiple" class="input-img"
+                                   accept="image/*">
+                            <button type="button" class="hidden btn-primary btn-uploadImg" id="btn-uploadImg"
+                                    name="btn-uploadImg">
                                 确认更换
                             </button>
                         </form>
                     </div>
                     <div class="media-body">
-                        <ul class="info-list">
-                            <li>
-                                用户名：[[${session.user.name}]]
-                            </li>
-                            <li>
-                                邮箱：<span th:text="${session.user.email}"></span>
-                            </li>
-                            <li>
-                                最后操作时间：<span
-                                    th:text="${#dates.format(session.user.gmtModified,'yyyy-MM-dd HH:mm')}"></span>
-                            </li>
-                        </ul>
+                        <form id="info-form">
+                            <table>
+                                <tr>
+                                    <td>用户名：</td>
+                                    <td><input type="text" id="info-name" name="info-name"
+                                               th:value="${session.user.name}" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td>邮箱：</td>
+                                    <td><input type="text" id="info-email" name="info-email"
+                                               th:value="${session.user.email}" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td>最新动态：</td>
+                                    <td>[[${#dates.format(session.user.gmtModified,'yyyy-MM-dd HH:mm')}]]</td>
+                                </tr>
+                            </table>
+                        </form>
                     </div>
                 </div>
+                <!--操作-->
+                <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle info-operate" type="button"
+                                    id="dropdownMenu1"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                操作
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a style="cursor: pointer" id="updateInfo">修改</a></li>
+                                <li><a style="cursor: pointer" id="confirmInfo">确认修改</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">访问与操作记录（计划使用echarts做图表了）</div>
             </div>
             <!--分页-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"

@@ -42,7 +42,7 @@ public class UserService {
             //github用户头像的更新规则：默认使用github头像，如果用户在资料中心更换头像，
             // 则用户头像不再随github的头像更换而改变
             //如果头像是在本站内更换的，那么不会更新github头像的,反之，如果没有在本站更换过，那么就随github的变
-            if (dbUser.getAvatarUrl().indexOf(imgPrefix) == -1){
+            if (dbUser.getAvatarUrl().indexOf(imgPrefix) == -1) {
                 updateUser.setAvatarUrl(user.getAvatarUrl());
             }
             updateUser.setToken(user.getToken());
@@ -50,6 +50,34 @@ public class UserService {
             UserExample example = new UserExample();
             example.createCriteria().andIdEqualTo(dbUser.getId());
             userMapper.updateByExampleSelective(updateUser, example);
+        }
+    }
+
+    /**
+     * 验证用户名是否存在
+     */
+    public boolean usernameExists(String username) {
+        UserExample example = new UserExample();
+        example.createCriteria().andNameEqualTo(username);
+        List<User> users = userMapper.selectByExample(example);
+        if (users != null && users.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 验证邮箱是否存在
+     */
+    public boolean emailExists(String email) {
+        UserExample example = new UserExample();
+        example.createCriteria().andEmailEqualTo(email);
+        List<User> users = userMapper.selectByExample(example);
+        if (users != null && users.size() > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

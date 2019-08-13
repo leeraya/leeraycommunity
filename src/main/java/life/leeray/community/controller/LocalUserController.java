@@ -4,10 +4,11 @@ import life.leeray.community.dto.ResultDTO;
 import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.User;
 import life.leeray.community.model.UserExample;
+import life.leeray.community.service.UserService;
 import life.leeray.community.utils.CodeVerify;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author leeray
@@ -33,6 +35,12 @@ public class LocalUserController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @RequestMapping("/login")
     public String login() {
@@ -65,16 +73,10 @@ public class LocalUserController {
         } else if (password.length() < 6 || password.length() > 30) {
             return ResultDTO.pwdLengthError();
         }
-        UserExample example1 = new UserExample();
-        example1.createCriteria().andNameEqualTo(username);
-        List<User> users1 = userMapper.selectByExample(example1);
-        if (users1 != null && users1.size() != 0) {
+        if (userService.usernameExists(username)) {
             return ResultDTO.duplicateName();
         }
-        UserExample example2 = new UserExample();
-        example2.createCriteria().andEmailEqualTo(email);
-        List<User> users2 = userMapper.selectByExample(example2);
-        if (users2 != null && users2.size() != 0) {
+        if (userService.emailExists(email)) {
             return ResultDTO.duplicateEmail();
         }
         //如果都经过了检查，那么就将用户写入数据库
@@ -127,4 +129,33 @@ public class LocalUserController {
         ImageIO.write(image, "png", os);
     }
 
+    /**
+     * 更新用户信息
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/user/updateInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultDTO updateUserInfo(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+
+        String infoName = request.getParameter("info-name").trim();
+        String infoEmail = request.getParameter("info-email").trim();
+
+        if (!infoName.equals(user.getName()) && userService.usernameExists(infoName)) {
+            return ResultDTO.duplicateName();
+        }
+        if (!infoEmail.equals(user.getEmail()) && userService.emailExists(infoEmail)) {
+            return ResultDTO.duplicateEmail();
+        }
+        user.setName(infoName);
+        user.setEmail(infoEmail);
+        user.setGmtModified(System.currentTimeMillis());
+        userMapper.updateByPrimaryKeySelective(user);
+        if (redisTemplate.hasKey("user" + user.getToken())) {
+            redisTemplate.opsForValue().set("user" + user.getToken(), user, 600, TimeUnit.SECONDS);
+        }
+        return ResultDTO.okOff();
+    }
 }
