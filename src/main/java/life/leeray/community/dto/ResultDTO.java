@@ -98,4 +98,25 @@ public class ResultDTO<T> implements Serializable {
         resultDTO.setMessage("测试测试！");
         return resultDTO;
     }
+
+    public static ResultDTO NoLogin() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3007);
+        resultDTO.setMessage("用户未登录！");
+        return resultDTO;
+    }
+
+    public static ResultDTO NoSupportAccount() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3008);
+        resultDTO.setMessage("不支持的账户！");
+        return resultDTO;
+    }
+
+    public static ResultDTO OldPwdError() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3009);
+        resultDTO.setMessage("旧密码错误！");
+        return resultDTO;
+    }
 }

@@ -6,6 +6,7 @@ import life.leeray.community.model.User;
 import life.leeray.community.model.UserExample;
 import life.leeray.community.service.UserService;
 import life.leeray.community.utils.CodeVerify;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -185,25 +186,78 @@ public class LocalUserController {
     }
 
     /**
+     * 跳转到找回密码页面
      * 找回密码，根据传进来的用户名找到用户的邮箱，向用户发送修改密码的邮件
      * 考虑：邮箱传送什么内容？
      *
      * @return
      */
     @RequestMapping(value = "/user/findPwd")
-    @ResponseBody
-    public ResultDTO findPassword(HttpServletRequest request) {
+    public String findPassword(HttpServletRequest request) {
         return null;
     }
 
     /**
-     * 修改密码
+     * 跳转到修改密码页面
      *
      * @return
      */
     @RequestMapping(value = "/user/updatePwd")
+    public String updatePassword(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
+        return "updatePwd";
+    }
+
+    @RequestMapping(value = "/user/doUpdatePwd")
     @ResponseBody
-    public ResultDTO updatePassword(HttpServletRequest request) {
-        return null;
+    public ResultDTO doUpdatePassword(HttpServletRequest request,
+                                      HttpServletResponse response) {
+        User user = (User) request.getSession().getAttribute("user");
+        //用户非登录态无法使用修改密码功能
+        if (user == null) {
+            return ResultDTO.NoLogin();
+        }
+        //用户是第三方账号登录，那么也不允许修改密码，因为它在本站的账号没有密码
+        if (StringUtils.isNotBlank(user.getAccountId())) {
+            return ResultDTO.NoSupportAccount();
+        }
+        //那么如果是登录的本地用户，那么就开始修改密码吧！
+        String old_password = request.getParameter("old_password").trim();
+        String password = request.getParameter("password").trim();
+        String confirm_password = request.getParameter("confirm_password").trim();
+        String captcha = request.getParameter("captcha").trim();
+
+        HttpSession session = request.getSession();
+        String imageCode = (String) session.getAttribute("imageCode");
+
+        if (!old_password.equals(user.getPassword())) {
+            return ResultDTO.OldPwdError();
+        }
+        if (!imageCode.toUpperCase().equals(captcha.toUpperCase())) {
+            return ResultDTO.captchaError();
+        }
+        if (!password.equals(confirm_password)) {
+            return ResultDTO.confirmError();
+        }
+        //一切正常，修改数据吧
+        user.setPassword(password);
+        userMapper.updateByPrimaryKeySelective(user);
+        //用户需要退出登录，然后重新登录，并删除token,redis中相关数据
+        String token = user.getToken();
+        if (redisTemplate.hasKey("user" + token)) {
+            redisTemplate.delete("user" + token);
+        }
+        //清除session
+        session.removeAttribute("user");
+        session.removeAttribute("unreadCount");
+        //清除cookie
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return ResultDTO.okOff();
     }
 }

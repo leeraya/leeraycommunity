@@ -1,16 +1,28 @@
 $(document).ready(function () {
-    $('#registBtn').click(function () {
+    $('#updatePwdBtn').click(function () {
         var params = $("input").serialize();
+
+        var password = $("#password").val();
+        var confirm_password = $("#confirm_password").val();
+        var old_password = $("#old_password").val();
+        if (!password == confirm_password) {
+            alert('新密码两次输入不一致！');
+            return;
+        }
+        if (password == old_password) {
+            alert('新密码与旧密码不能相同！');
+            return;
+        }
         $.ajax({
             type: 'post',
-            url: '/doRegist',
+            url: '/user/doUpdatePwd',
             data: params,
             dataType: 'json',
             timeout: 1000,
             success: function (response) {
                 if (response.code == 200) {
-                    alert('注册成功，现在返回首页...');
-                    location.href = "/";
+                    alert('修改密码成功，现在返回登录页...');
+                    location.href = "/login";
                 } else {
                     alert(response.message);
                     refresh_captcha();
