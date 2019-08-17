@@ -9,6 +9,7 @@ import life.leeray.community.utils.CodeVerify;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -157,5 +158,52 @@ public class LocalUserController {
             redisTemplate.opsForValue().set("user" + user.getToken(), user, 600, TimeUnit.SECONDS);
         }
         return ResultDTO.okOff();
+    }
+
+    /**
+     * 用户登出
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();//从request中获取session
+        User user = (User) session.getAttribute("user");
+        String token = user.getToken();
+        if (redisTemplate.hasKey("user" + token)) {
+            redisTemplate.delete("user" + token);
+        }
+        session.removeAttribute("user");
+        session.removeAttribute("unreadCount");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
+
+    /**
+     * 找回密码，根据传进来的用户名找到用户的邮箱，向用户发送修改密码的邮件
+     * 考虑：邮箱传送什么内容？
+     *
+     * @return
+     */
+    @RequestMapping(value = "/user/findPwd")
+    @ResponseBody
+    public ResultDTO findPassword(HttpServletRequest request) {
+        return null;
+    }
+
+    /**
+     * 修改密码
+     *
+     * @return
+     */
+    @RequestMapping(value = "/user/updatePwd")
+    @ResponseBody
+    public ResultDTO updatePassword(HttpServletRequest request) {
+        return null;
     }
 }

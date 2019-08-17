@@ -71,19 +71,5 @@ public class AuthorizeController {
         }
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();//从request中获取session
-        User user = (User) session.getAttribute("user");
-        String token = user.getToken();
-        if (redisTemplate.hasKey("user" + token)) {
-            redisTemplate.delete("user" + token);
-        }
-        session.removeAttribute("user");
-        Cookie cookie = new Cookie("token", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-        return "redirect:/";
-    }
+
 }
