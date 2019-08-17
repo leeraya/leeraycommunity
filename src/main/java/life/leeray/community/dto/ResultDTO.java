@@ -119,4 +119,18 @@ public class ResultDTO<T> implements Serializable {
         resultDTO.setMessage("旧密码错误！");
         return resultDTO;
     }
+
+    public static ResultDTO NoSuchAccount() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3010);
+        resultDTO.setMessage("用户名不存在！");
+        return resultDTO;
+    }
+
+    public static ResultDTO NoEmail() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3011);
+        resultDTO.setMessage("抱歉呢，该用户没有邮箱...请尝试其他方法");
+        return resultDTO;
+    }
 }

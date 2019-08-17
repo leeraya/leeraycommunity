@@ -1,5 +1,6 @@
 package life.leeray.community.controller;
 
+import life.leeray.community.dto.EmailDTO;
 import life.leeray.community.dto.ResultDTO;
 import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.User;
@@ -9,6 +10,8 @@ import life.leeray.community.utils.CodeVerify;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,14 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -43,6 +44,9 @@ public class LocalUserController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
     @RequestMapping("/login")
     public String login() {
@@ -193,8 +197,61 @@ public class LocalUserController {
      * @return
      */
     @RequestMapping(value = "/user/findPwd")
-    public String findPassword(HttpServletRequest request) {
-        return null;
+    public String findPassword() {
+        return "findPwd";
+    }
+
+    /**
+     * 发送邮件验证码 找回密码
+     *
+     * @return
+     */
+    @RequestMapping(value = "/user/doFindPwd")
+    @ResponseBody
+    public ResultDTO doFindPassword(HttpServletRequest request) {
+        String username = request.getParameter("username").trim();
+        UserExample example = new UserExample();
+        example.createCriteria().andNameEqualTo(username);
+        List<User> users = userMapper.selectByExample(example);
+        if (!userService.usernameExists(username)) {
+            //用户名不存在
+            return ResultDTO.NoSuchAccount();
+        }
+        User user = users.get(0);
+        if (StringUtils.isNotBlank(user.getAccountId())) {
+            //第三方登录用户不能在本站修改密码
+            return ResultDTO.NoSupportAccount();
+        }
+        if ("".equals(user.getEmail()) || user.getEmail() == null) {
+            //用户没有邮箱，没有办法通过邮箱验证码找回密码
+            return ResultDTO.NoEmail();
+        }
+        Random rd = new Random();
+        String emailVerifCode = String.valueOf(rd.nextInt(10))
+                + String.valueOf(rd.nextInt(10)) + String.valueOf(rd.nextInt(10)) +
+                String.valueOf(rd.nextInt(10));
+        request.getSession().setAttribute("emailVerifCode" + user.getId(), emailVerifCode);
+        request.getSession().setAttribute("username",user.getName());
+        //发送邮件
+        SimpleMailMessage simpleMessage = new SimpleMailMessage();
+        simpleMessage.setSubject("LeerayConmmunity邮箱验证");
+        simpleMessage.setText("找回密码验证码：" + emailVerifCode +
+                " 请及时修改密码，如本邮件与您无关，请忽略这封邮件！");
+        simpleMessage.setTo(user.getEmail());
+        simpleMessage.setFrom("1964773741@qq.com");
+        javaMailSender.send(simpleMessage);
+        return ResultDTO.okOff();
+    }
+
+    @RequestMapping("/user/toFindPwdStep2")
+    public String toFindPwdStep2() {
+        return "findPwdStep2";
+    }
+
+    @RequestMapping(value = "/user/doFindPwdStep2")
+    @ResponseBody
+    public ResultDTO doFindPasswordStep2(HttpServletRequest request) {
+        return ResultDTO.test();
     }
 
     /**

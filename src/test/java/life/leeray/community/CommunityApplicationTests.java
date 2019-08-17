@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -62,6 +64,18 @@ public class CommunityApplicationTests {
     @Test
     public void Test11(){
         System.out.println(this.getUser(24L));
+    }
+
+    @Autowired
+    JavaMailSenderImpl javaMailSender;
+    @Test
+    public void TT(){
+        SimpleMailMessage simpleMessage = new SimpleMailMessage();
+        simpleMessage.setSubject("通知-这是一个测试程序");
+        simpleMessage.setText("测测测！");
+        simpleMessage.setTo("1034776984@qq.com");
+        simpleMessage.setFrom("1964773741@qq.com");
+        javaMailSender.send(simpleMessage);
     }
 
 }

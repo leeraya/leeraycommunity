@@ -5,6 +5,20 @@ $(document).ready(function () {
         var password = $("#password").val();
         var confirm_password = $("#confirm_password").val();
         var old_password = $("#old_password").val();
+
+        if (password == null || password == '') {
+            alert('新密码不能为空!');
+            return;
+        }
+        if (confirm_password == null || confirm_password == '') {
+            alert('确认密码不能为空!');
+            return;
+        }
+        if (old_password == null || old_password == '') {
+            alert('旧密码不能为空!');
+            return;
+        }
+
         if (!password == confirm_password) {
             alert('新密码两次输入不一致！');
             return;

@@ -1,10 +1,13 @@
 package life.leeray.community.service;
 
+import life.leeray.community.dto.EmailDTO;
 import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.User;
 import life.leeray.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -79,5 +82,14 @@ public class UserService {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 发送邮件
+     *
+     * @param emailDTO
+     */
+    public void sendEmail(EmailDTO emailDTO) {
+
     }
 }
