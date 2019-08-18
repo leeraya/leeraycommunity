@@ -1,6 +1,5 @@
 package life.leeray.community.controller;
 
-import life.leeray.community.dto.EmailDTO;
 import life.leeray.community.dto.ResultDTO;
 import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.User;
@@ -231,7 +230,7 @@ public class LocalUserController {
                 + String.valueOf(rd.nextInt(10)) + String.valueOf(rd.nextInt(10)) +
                 String.valueOf(rd.nextInt(10));
         request.getSession().setAttribute("emailVerifCode" + user.getId(), emailVerifCode);
-        request.getSession().setAttribute("username",user.getName());
+        request.getSession().setAttribute("username", user.getName());
         //发送邮件
         SimpleMailMessage simpleMessage = new SimpleMailMessage();
         simpleMessage.setSubject("LeerayConmmunity邮箱验证");
@@ -248,10 +247,42 @@ public class LocalUserController {
         return "findPwdStep2";
     }
 
+    /**
+     * 修改第二步
+     *
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/user/doFindPwdStep2")
     @ResponseBody
     public ResultDTO doFindPasswordStep2(HttpServletRequest request) {
-        return ResultDTO.test();
+        String username = request.getParameter("username").trim();
+        String password = request.getParameter("password").trim();
+        String confirm_password = request.getParameter("confirm_password").trim();
+        String emailVerifCode = request.getParameter("emailVerifCode").trim();
+
+        UserExample example = new UserExample();
+        example.createCriteria().andNameEqualTo(username);
+        List<User> users = userMapper.selectByExample(example);
+        User user = users.get(0);
+        String generatedverifyCode = (String) request.getSession().getAttribute("emailVerifCode" + user.getId());
+
+        if (StringUtils.isBlank(generatedverifyCode)) {
+            return ResultDTO.NoVerifyCode();
+        }
+        if (!generatedverifyCode.equals(emailVerifCode)) {
+            return ResultDTO.captchaError();
+        }
+        if (!password.equals(confirm_password)) {
+            return ResultDTO.confirmError();
+        }
+        user.setPassword(password);
+        user.setGmtModified(System.currentTimeMillis());
+        userMapper.updateByPrimaryKeySelective(user);
+        HttpSession session = request.getSession();
+        session.removeAttribute("username");
+        session.removeAttribute("emailVerifCode" + user.getId());
+        return ResultDTO.okOff();
     }
 
     /**
@@ -301,6 +332,7 @@ public class LocalUserController {
         }
         //一切正常，修改数据吧
         user.setPassword(password);
+        user.setGmtModified(System.currentTimeMillis());
         userMapper.updateByPrimaryKeySelective(user);
         //用户需要退出登录，然后重新登录，并删除token,redis中相关数据
         String token = user.getToken();

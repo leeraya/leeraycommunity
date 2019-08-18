@@ -133,4 +133,11 @@ public class ResultDTO<T> implements Serializable {
         resultDTO.setMessage("抱歉呢，该用户没有邮箱...请尝试其他方法");
         return resultDTO;
     }
+
+    public static ResultDTO NoVerifyCode() {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(3011);
+        resultDTO.setMessage("没有邮箱验证！");
+        return resultDTO;
+    }
 }
