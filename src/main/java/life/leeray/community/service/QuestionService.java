@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -119,9 +121,14 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Long id) {
-        Question question = questionMapper.selectByPrimaryKey(id);
-        if (question == null) {
-            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        Question question;
+        if (redisTemplate.hasKey("question" + id)) {
+            question = (Question) redisTemplate.opsForValue().get("question" + id);
+        } else {
+            question = questionMapper.selectByPrimaryKey(id);
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
@@ -136,6 +143,10 @@ public class QuestionService {
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
             questionMapper.insertSelective(question);
+            //新发布的问题被访问的几率可能大一点，所以将它房屋redis中
+            if (!redisTemplate.hasKey("question" + question.getId())) {
+                redisTemplate.opsForValue().set("question" + question.getId(), question, 800, TimeUnit.SECONDS);
+            }
         } else {
             //是更新的发布
             Question updateQuestion = new Question();
@@ -149,6 +160,10 @@ public class QuestionService {
             int updated = questionMapper.updateByExampleSelective(updateQuestion, questionExample);
             if (updated != 1) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+            if (redisTemplate.hasKey("question" + question.getId())) {
+                redisTemplate.opsForValue().set("question" + question.getId()
+                        , questionMapper.selectByPrimaryKey(question.getId()), 600, TimeUnit.SECONDS);
             }
         }
     }
@@ -175,6 +190,56 @@ public class QuestionService {
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question != null && user.getId().equals(question.getCreator())) {
             questionMapper.deleteByPrimaryKey(id);
+            if (redisTemplate.hasKey("question" + id)) {
+                redisTemplate.delete("question" + id);
+            }
+        }
+    }
+
+    /**
+     * 寻找热门问题列表
+     *
+     * @return
+     */
+    public List<Question> findHotQuestions() {
+        //查找热门问题预选
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCommentCountGreaterThan(0)
+                .andViewCountGreaterThan(0);
+        List<Question> questions = questionMapper.selectByExample(example);
+        //按照自定义热度算法排序
+        Collections.sort(questions, (q1, q2) -> {
+            if (((q1.getViewCount() * 2 + q1.getCommentCount() * 8) / 10.0) > ((q2.getViewCount() * 2 + q2.getCommentCount() * 8) / 10)) {
+                return -1;
+            } else if (((q1.getViewCount() * 2 + q1.getCommentCount() * 8) / 10.0) < ((q2.getViewCount() * 2 + q2.getCommentCount() * 8) / 2)) {
+                return 1;
+            } else {
+                if (q1.getGmtModified() >= q2.getGmtModified()) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        //要返回的列表，空间有限，只返回前面一部分的数据
+        ArrayList<Question> ret = new ArrayList<>();
+        if (questions.size() > 6) {
+            //同时考虑热门问题被访问的概率大，将它们放入redis缓存中，提高访问效率
+            for (int i = 0; i < 6; i++) {
+                Question e = questions.get(i);
+                ret.add(e);
+                if (!redisTemplate.hasKey("question" + e.getId())) {
+                    redisTemplate.opsForValue().set("question" + e.getId(), e, 800, TimeUnit.SECONDS);
+                }
+            }
+            return ret;
+        } else {
+            for (Question question : questions) {
+                if (redisTemplate.hasKey("question" + question.getId())) {
+                    redisTemplate.opsForValue().set("question" + question.getId(), question, 800, TimeUnit.SECONDS);
+                }
+            }
+            return questions;
         }
     }
 }

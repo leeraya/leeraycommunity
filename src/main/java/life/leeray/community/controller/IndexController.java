@@ -1,12 +1,15 @@
 package life.leeray.community.controller;
 
 import life.leeray.community.dto.PaginationDTO;
+import life.leeray.community.model.Question;
 import life.leeray.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * @author leeray
@@ -32,7 +35,10 @@ public class IndexController {
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "10") Integer size,
                         @RequestParam(name = "search", required = false) String search) {
+        //添加热门问题列表
+        List<Question> hotQuestions = questionService.findHotQuestions();
         PaginationDTO pagination = questionService.list(search, page, size);//根据关键字，页数，条数搜索问题
+        model.addAttribute("hotQuestions", hotQuestions);
         model.addAttribute("pagination", pagination);
         model.addAttribute("search", search);//将search关键字放回model中，前端可能还需要。
         return "index";

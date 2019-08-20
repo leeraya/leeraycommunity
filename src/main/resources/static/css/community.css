@@ -1,10 +1,14 @@
 body {
     background-color: #efefef;
+    background: url("/images/bg.jpg");
 }
 
 .main {
     background-color: white;
-    margin: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 .btn-publish {
@@ -147,4 +151,35 @@ body {
 
 .info-operate{
     margin-top: 15px;
+}
+
+.info-list{
+    list-style: none;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.info-list li{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+.info-list img{
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    margin-bottom: 2px;
+}
+
+.right-line{
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: rgb(230,230,230);
+}
+
+.hot-list{
+    list-style: none;
+}
+.hot-list li{
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

@@ -16,11 +16,13 @@
 <div th:replace="navigation :: topbar"></div>
 <div class="container-fluid main profile">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 right-line">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h2><span th:text="${sectionName}"></span></h2>
             </div>
-            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            </div>
             <!--我的问题-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'questions'}">
                 <div class="media" th:each="question : ${pagination.data}" style="overflow: visible">
