@@ -206,7 +206,7 @@ public class QuestionService {
         QuestionExample example = new QuestionExample();
         example.createCriteria().andCommentCountGreaterThan(0)
                 .andViewCountGreaterThan(0);
-        List<Question> questions = questionMapper.selectByExample(example);
+        List<Question> questions = questionMapper.selectByExampleWithBLOBs(example);
         //按照自定义热度算法排序
         Collections.sort(questions, (q1, q2) -> {
             if (((q1.getViewCount() * 2 + q1.getCommentCount() * 8) / 10.0) > ((q2.getViewCount() * 2 + q2.getCommentCount() * 8) / 10)) {
