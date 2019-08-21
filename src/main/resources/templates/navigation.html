@@ -25,8 +25,8 @@
                 <li th:if="${session.user != null}">
                     <a href="/publish">发布主题</a>
                 </li>
-                <li><a href="/profile/replies">通知
-                    <span class="badge" th:text="${session.unreadCount}"></span>
+                <li><a href="/profile/replies"><img src="/images/commc/通知.png" class="notify-img">
+                    <span th:if="${session.unreadCount>0}" th:text="${session.unreadCount}"></span>
                 </a>
                 </li>
                 <li class="dropdown" th:if="${session.user != null}">
@@ -38,7 +38,8 @@
                     <ul class="dropdown-menu">
                         <li><a href="/profile/questions">我的问题</a></li>
                         <li><a href="/profile/info">个人资料</a></li>
-                        <li th:class="${session.user.password==null}?disabled:''"><a href="/user/updatePwd">修改密码</a></li>
+                        <li th:class="${session.user.password==null}?disabled:''"><a href="/user/updatePwd">修改密码</a>
+                        </li>
                         <li><a href="/logout">退出登录</a></li>
                     </ul>
                 </li>

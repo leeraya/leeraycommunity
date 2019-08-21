@@ -10,6 +10,9 @@ spring:
   thymeleaf:
     #开发阶段禁用缓存
     cache: false
+  servlet:
+    multipart:
+      max-file-size: 100MB
 mybatis:
   configuration:
     #开启驼峰命名

@@ -157,11 +157,12 @@ body {
     list-style: none;
     margin-top: 20px;
     margin-bottom: 20px;
+    margin-left: 0px;
 }
 .info-list li{
     margin-top: 10px;
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 14px;
 }
 .info-list img{
     width: 20px;
@@ -182,4 +183,10 @@ body {
 .hot-list li{
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.notify-img{
+    width: 20px;
+    height: 20px;
+    margin-bottom: 2px;
 }
