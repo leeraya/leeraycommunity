@@ -96,6 +96,14 @@
                    </li>
                 </ul>
             </div>
+            <h4>热门标签</h4>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <ul class="hot-list">
+                    <li th:each="tag:${hotTags}">
+                        <a href="#" th:text="${tag}"></a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

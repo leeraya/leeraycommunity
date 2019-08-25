@@ -53,4 +53,7 @@
         order by gmt_modified desc
         limit #{page},#{size}
     </select>
+    <select id="findHotTags" resultType="java.lang.String">
+        SELECT tag from question
+    </select>
 </mapper>

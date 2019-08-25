@@ -37,8 +37,13 @@ public class IndexController {
                         @RequestParam(name = "search", required = false) String search) {
         //添加热门问题列表
         List<Question> hotQuestions = questionService.findHotQuestions();
+        //热门标签
+        List<String> hotTags = questionService.findHotTags();
+
         PaginationDTO pagination = questionService.list(search, page, size);//根据关键字，页数，条数搜索问题
         model.addAttribute("hotQuestions", hotQuestions);
+        model.addAttribute("hotTags", hotTags);
+
         model.addAttribute("pagination", pagination);
         model.addAttribute("search", search);//将search关键字放回model中，前端可能还需要。
         return "index";

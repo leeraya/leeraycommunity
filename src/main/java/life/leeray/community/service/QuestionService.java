@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -129,6 +126,8 @@ public class QuestionService {
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
+            //再将刚才被访问的问题放入redis
+            redisTemplate.opsForValue().set("question" + id, question, 600, TimeUnit.SECONDS);
         }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
@@ -241,5 +240,43 @@ public class QuestionService {
             }
             return questions;
         }
+    }
+
+    /**
+     * 在加载首页时，加载热门标签
+     * 实现逻辑：先从数据库中查找所有问题的标签，然后按,分割标签，使用Map统计各个标签的次数，次数多的标签就是热门标签
+     *
+     * @return
+     */
+    public List<String> findHotTags() {
+        List<String> hotTags = questionExtMapper.findHotTags();
+        Map<String, Long> tagMap = new TreeMap<>();
+        for (String hotTag : hotTags) {
+            //一个问题的标签可能有多个，将它们分割
+            String[] tag = hotTag.split(",");
+            for (String s : tag) {
+                if (!tagMap.containsKey(s)) {
+                    tagMap.put(s, 1L);
+                } else {
+                    tagMap.put(s, tagMap.get(s) + 1);
+                }
+            }
+        }
+        //list中存的是k-v对
+        List<Map.Entry<String, Long>> list = new ArrayList<Map.Entry<String, Long>>(tagMap.entrySet());
+        Collections.sort(list, (kv1, kv2) -> {
+            return kv2.getValue().compareTo(kv1.getValue());
+        });
+        List<String> ret = new ArrayList<>();
+        if (list.size() > 10) {
+            for (int i = 0; i < 10; i++) {
+                ret.add(list.get(i).getKey());
+            }
+        } else {
+            for (Map.Entry<String, Long> stringLongEntry : list) {
+                ret.add(stringLongEntry.getKey());
+            }
+        }
+        return ret;
     }
 }

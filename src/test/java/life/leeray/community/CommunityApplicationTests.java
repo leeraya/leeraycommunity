@@ -1,5 +1,6 @@
 package life.leeray.community;
 
+import life.leeray.community.mapper.QuestionExtMapper;
 import life.leeray.community.mapper.QuestionMapper;
 import life.leeray.community.mapper.UserMapper;
 import life.leeray.community.model.Question;
@@ -16,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -76,6 +78,17 @@ public class CommunityApplicationTests {
         simpleMessage.setTo("1034776984@qq.com");
         simpleMessage.setFrom("1964773741@qq.com");
         javaMailSender.send(simpleMessage);
+    }
+
+
+    @Autowired
+    QuestionExtMapper questionExtMapper;
+    @Test
+    public void TT1(){
+        List<String> hotTags = questionExtMapper.findHotTags();
+        for (String hotTag : hotTags) {
+            System.out.println(hotTag);
+        }
     }
 
 }
