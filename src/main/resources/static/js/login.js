@@ -22,7 +22,7 @@ $(document).ready(function () {
             timeout: 1000,
             success: function (response) {
                 if (response.code == 200) {
-                    alert('登录成功，现在返回首页...');
+                    alert('登录成功，现在返回...');
                     location.href = "/";
                 } else {
                     alert(response.message);

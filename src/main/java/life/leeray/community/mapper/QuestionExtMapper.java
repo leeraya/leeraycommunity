@@ -21,5 +21,7 @@ public interface QuestionExtMapper {
 
     List<Question> selectBySearch(QuestionQueryDTO questionQueryDTO);
 
+    List<Question> selectByTag(QuestionQueryDTO questionQueryDTO);
+
     List<String> findHotTags();
 }

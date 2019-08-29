@@ -1,8 +1,10 @@
 package life.leeray.community.service;
 
+import io.netty.util.internal.StringUtil;
 import life.leeray.community.dto.PaginationDTO;
 import life.leeray.community.dto.QuestionDTO;
 import life.leeray.community.dto.QuestionQueryDTO;
+import life.leeray.community.enums.SortEnum;
 import life.leeray.community.exception.CustomizeErrorCode;
 import life.leeray.community.exception.CustomizeException;
 import life.leeray.community.mapper.QuestionExtMapper;
@@ -42,14 +44,35 @@ public class QuestionService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public PaginationDTO list(String search, Integer page, Integer size) {
+    public PaginationDTO list(String search, String tag, String sort, Integer page, Integer size) {
         if (StringUtils.isNotBlank(search)) {
             String[] tags = StringUtils.split(search, " ");
-            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+            search = Arrays.stream(tags).filter(StringUtils::isNotBlank)
+                    .map(t -> t.replace("+", "").replace("*", "").replace("?", ""))
+                    .filter(StringUtils::isNotBlank)
+                    .collect(Collectors.joining("|"));
         }
+
         //查询参数的DTO
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
+        if (StringUtils.isNotBlank(tag)) {
+            tag = tag.replace("+", "").replace("*", "").replace("?", "");
+            questionQueryDTO.setTag(tag);
+        }
+
+        for (SortEnum sortEnum : SortEnum.values()) {
+            if (sortEnum.name().toLowerCase().equals(sort)) {
+                questionQueryDTO.setSort(sort);
+                if (sortEnum == SortEnum.HOT7) {
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 7);
+                }
+                if (sortEnum == SortEnum.HOT30) {
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30);
+                }
+                break;
+            }
+        }
 
         //查询符合条件的问题的条数
         Integer count = questionExtMapper.countBySearch(questionQueryDTO);

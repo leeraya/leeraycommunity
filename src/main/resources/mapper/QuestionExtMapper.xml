@@ -41,6 +41,15 @@
             <if test="search != null and search != ''">
                 and title regexp #{search}
             </if>
+            <if test="tag != null and tag != ''">
+                and tag regexp #{tag}
+            </if>
+            <if test="sort != null and sort != '' and sort == 'no'">
+                and comment_count = 0
+            </if>
+            <if test="time != null and time != ''">
+                and gmt_create > #{time}
+            </if>
         </where>
     </select>
     <select id="selectBySearch" parameterType="life.leeray.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
@@ -49,10 +58,31 @@
             <if test="search != null and search != ''">
                 and title regexp #{search}
             </if>
+            <if test="tag != null and tag != ''">
+                and tag regexp #{tag}
+            </if>
+            <if test="sort != null and sort != '' and sort == 'no'">
+                and comment_count = 0
+            </if>
+            <if test="time != null and time != ''">
+                and gmt_create > #{time}
+            </if>
         </where>
-        order by gmt_modified desc
+        <if test="sort == null or sort == ''">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and sort == 'new'">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and sort == 'no'">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and (sort == 'hot' || sort == 'hot7' || sort == 'hot30')">
+            order by comment_count desc
+        </if>
         limit #{page},#{size}
     </select>
+
     <select id="findHotTags" resultType="java.lang.String">
         SELECT tag from question
     </select>

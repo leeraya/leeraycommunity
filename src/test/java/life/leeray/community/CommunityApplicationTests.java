@@ -1,5 +1,6 @@
 package life.leeray.community;
 
+import life.leeray.community.dto.QuestionQueryDTO;
 import life.leeray.community.mapper.QuestionExtMapper;
 import life.leeray.community.mapper.QuestionMapper;
 import life.leeray.community.mapper.UserMapper;
@@ -58,20 +59,21 @@ public class CommunityApplicationTests {
         }
     }
 
-    @Cacheable(cacheNames = "user",key = "#id")
-    public  User getUser(Long id){
+    @Cacheable(cacheNames = "user", key = "#id")
+    public User getUser(Long id) {
         return userMapper.selectByPrimaryKey(id);
     }
 
     @Test
-    public void Test11(){
+    public void Test11() {
         System.out.println(this.getUser(24L));
     }
 
     @Autowired
     JavaMailSenderImpl javaMailSender;
+
     @Test
-    public void TT(){
+    public void TT() {
         SimpleMailMessage simpleMessage = new SimpleMailMessage();
         simpleMessage.setSubject("通知-这是一个测试程序");
         simpleMessage.setText("测测测！");
@@ -83,11 +85,16 @@ public class CommunityApplicationTests {
 
     @Autowired
     QuestionExtMapper questionExtMapper;
+
     @Test
-    public void TT1(){
-        List<String> hotTags = questionExtMapper.findHotTags();
-        for (String hotTag : hotTags) {
-            System.out.println(hotTag);
+    public void TT1() {
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setPage(1);
+        questionQueryDTO.setSize(5);
+        questionQueryDTO.setTag("JAVA");
+        List<Question> questions = questionExtMapper.selectByTag(questionQueryDTO);
+        for (Question question : questions) {
+            System.out.println(question.getTag());
         }
     }
 

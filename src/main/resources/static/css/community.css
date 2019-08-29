@@ -190,3 +190,7 @@ body {
     height: 20px;
     margin-bottom: 2px;
 }
+
+.red {
+    color: red !important;
+}
