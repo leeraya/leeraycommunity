@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "copypipeline1",
+				"name": "CopyFromBlob1",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
